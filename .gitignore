@@ -1,0 +1,24 @@
+# Git ignore
+# Java
+/target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.ipr
+*.iml
+
+# Node.js / React
+frontend/**/node_modules/
+frontend/**/dist/
+frontend/**/.env
+frontend/**/.vite/
+
+# SO
+.DS_Store
+Thumbs.db
