@@ -1,5 +1,6 @@
 package com.entregaFinal.gestion.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.*;
 
@@ -15,7 +16,8 @@ public class Pedido {
     private Double total;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<LineaPedido> lineas = new ArrayList<>();
+    @JsonManagedReference
+    private List<LineaPedido> lineas;
 
     // Getters y Setters
     public Integer getId() { return id; }

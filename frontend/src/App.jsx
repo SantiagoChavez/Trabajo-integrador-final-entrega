@@ -1,22 +1,40 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProductoList from './components/ProductoList';
 import AgregarProducto from './components/AgregarProducto';
+import Carrito from './components/Carrito';
+import Pedidos from './components/Pedidos';
+import Inicio from './components/Inicio';
 
 function App() {
   return (
-    <div>
+    <Router>
       <Navbar />
       <main style={{ padding: '20px', textAlign: 'center' }}>
-        <h1>Sistema de Gestión - TechLab</h1>
-        <p>Seleccioná una opción del menú.</p>
+        <Routes>
+          <Route path="/" element={<Inicio />} />
 
-        <ProductoList />
-        <AgregarProducto />
+          <Route
+            path="/productos"
+            element={
+              <>
+                <h2>Lista de Productos</h2>
+                <ProductoList />
+                <AgregarProducto />
+              </>
+            }
+          />
+          <Route path="/carrito" element={<Carrito />} />
+          <Route path="/pedidos" element={<Pedidos />} />
+          <Route
+            path="/categorias"
+            element={<p>Sitio en construccion.</p>}
+          />
+        </Routes>
       </main>
-    </div>
+    </Router>
   );
 }
 
 export default App;
-

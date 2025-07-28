@@ -18,6 +18,20 @@ public class PedidoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Pedido createPedido(@RequestBody Pedido pedido) {
+        System.out.println("===== PEDIDO RECIBIDO =====");
+        System.out.println("Estado: " + pedido.getEstado());
+        System.out.println("Fecha: " + pedido.getFecha());
+        System.out.println("Total: " + pedido.getTotal());
+        if (pedido.getLineas() != null) {
+            for (int i = 0; i < pedido.getLineas().size(); i++) {
+                System.out.println("Línea " + (i + 1));
+                System.out.println(" - Producto ID: " +
+                        (pedido.getLineas().get(i).getProducto() != null ? pedido.getLineas().get(i).getProducto().getId() : "null"));
+                System.out.println(" - Cantidad: " + pedido.getLineas().get(i).getCantidad());
+            }
+        } else {
+            System.out.println("No hay líneas de pedido.");
+        }
         return pedidoService.createPedido(pedido);
     }
 

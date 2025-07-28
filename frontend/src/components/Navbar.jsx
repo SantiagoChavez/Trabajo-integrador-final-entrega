@@ -1,25 +1,19 @@
 import React from 'react';
-import {
-  FaHome,
-  FaBoxOpen,
-  FaTags,
-  FaShoppingCart,
-  FaListAlt
-} from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = () => {
+function Navbar() {
   return (
     <nav className="navbar">
       <ul>
-        <li><a href="#"><FaHome /> Inicio</a></li>
-        <li><a href="#"><FaBoxOpen /> Productos</a></li>
-        <li><a href="#"><FaTags /> Categorías</a></li>
-        <li><a href="#"><FaShoppingCart /> Carrito</a></li>
-        <li><a href="#"><FaListAlt /> Pedidos</a></li>
+        <li><Link to="/">🏠 Inicio</Link></li>
+        <li><Link to="/productos">📦 Productos</Link></li>
+        <li><Link to="/categorias">📚 Categorías</Link></li>
+        <li><Link to="/carrito">🛒 Carrito</Link></li>
+        <li><Link to="/pedidos">🧾 Pedidos</Link></li>
       </ul>
     </nav>
   );
-};
+}
 
 export default Navbar;

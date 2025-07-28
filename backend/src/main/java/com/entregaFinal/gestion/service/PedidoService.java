@@ -20,14 +20,28 @@ public class PedidoService {
 
     public Pedido createPedido(Pedido pedido) {
         double total = 0;
+
         for (LineaPedido linea : pedido.getLineas()) {
-            total += linea.getProducto().getPrecio() * linea.getCantidad();
+            Integer productoId = linea.getProducto().getId();
+            var productoOptional = productoRepository.findById(productoId);
+
+            if (productoOptional.isPresent()) {
+                var productoCompleto = productoOptional.get();
+                linea.setProducto(productoCompleto);  // seteamos el producto completo
+                total += productoCompleto.getPrecio() * linea.getCantidad();
+            } else {
+                throw new RuntimeException("Producto con ID " + productoId + " no encontrado");
+            }
+
+            linea.setPedido(pedido); // Asociamos el pedido a cada línea
         }
+
         pedido.setTotal(total);
         return pedidoRepository.save(pedido);
     }
-
     public List<Pedido> getAllPedidos() {
         return pedidoRepository.findAll();
     }
+
 }
+

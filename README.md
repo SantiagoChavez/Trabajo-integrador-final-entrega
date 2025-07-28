@@ -1,8 +1,10 @@
-\# Trabajo Integrador Final - Talento Tech
+\# Trabajo Integrador Final - Backend en Java
 
 
 
-Este proyecto es una aplicación web fullstack desarrollada como entrega final del curso \*\*Talento Tech\*\*. Consiste en un sistema de gestión de productos y pedidos, con un backend en Spring Boot y un frontend en React.
+Este proyecto es una aplicación web fullstack desarrollada como entrega final del curso \*\*Backend en Java\*\*.  
+
+Consiste en un sistema de gestión de productos y pedidos, utilizando un backend en Spring Boot y un frontend en React con Vite.
 
 
 
@@ -10,23 +12,21 @@ Este proyecto es una aplicación web fullstack desarrollada como entrega final d
 
 
 
-\##  Estructura del Proyecto
+\## Estructura del Proyecto
 
 
+
+```
 
 Trabajo-entregaFinal/
 
-├── backend/ # Backend con Spring Boot
+│
 
-└── frontend/ # Frontend con React + Vite
+├── backend/      # Backend con Spring Boot
 
+└── frontend/     # Frontend con React + Vite
 
-
-yaml
-
-Copiar
-
-Editar
+```
 
 
 
@@ -34,13 +34,13 @@ Editar
 
 
 
-\##  Tecnologías utilizadas
+\## Tecnologías utilizadas
 
 
 
 \### Backend
 
-\- Java 17+
+\- Java 24
 
 \- Spring Boot
 
@@ -58,9 +58,9 @@ Editar
 
 \- Vite
 
-\- Axios
+\- Fetch API
 
-\- HTML + CSS
+\- HTML, CSS
 
 
 
@@ -68,83 +68,131 @@ Editar
 
 
 
-\##  Cómo ejecutar el proyecto
+\## Funcionalidades implementadas
 
 
 
-\### 1. Clonar el repositorio
+\### 📦 Productos
+
+\- Listar todos los productos
+
+\- Agregar nuevos productos
+
+\- Eliminar productos existentes
+
+\- Control de stock automático al generar pedidos
 
 
 
-```bash
+\### 🛒 Carrito y Pedidos
 
-git clone git@github.com:SantiagoChavez/Trabajo-integrador-final-entrega.git
+\- Agregar productos al carrito
 
-cd Trabajo-integrador-final-entrega
+\- Crear pedidos a partir del carrito
 
-2\. Ejecutar el backend
+\- Validación de stock antes de confirmar pedido
 
-bash
+\- Visualización del historial de pedidos
 
-Copiar
-
-Editar
-
-cd backend
-
-mvn clean install
-
-mvn spring-boot:run
-
-La API se ejecutará en: http://localhost:8080
+\- Cálculo automático de totales
 
 
 
-3\. Ejecutar el frontend
+\### 🧭 Navegación
 
-bash
+\- Navegación entre secciones con React Router
 
-Copiar
+&nbsp; - Inicio
 
-Editar
+&nbsp; - Productos
 
-cd ../frontend
+&nbsp; - Categorías (estructura lista para extender)
 
-npm install
+&nbsp; - Carrito
 
-npm run dev
-
-La app se abrirá en: http://localhost:5173
+&nbsp; - Pedidos (historial)
 
 
 
-&nbsp;Endpoints disponibles
-
-GET /api/productos - Lista de productos
+---
 
 
 
-POST /api/productos - Crear nuevo producto
+\## Cómo ejecutar el proyecto
 
 
 
-POST /api/pedidos - Crear nuevo pedido
+\### Backend (Spring Boot)
 
 
 
-etc.
+1\. Abrir el proyecto en IntelliJ IDEA o IDE compatible
+
+2\. Ejecutar la clase `PreentregaJavaGestionApplication.java`
+
+3\. La API REST estará disponible en:  
+
+&nbsp;  `http://localhost:8080/api/productos`  
+
+&nbsp;  `http://localhost:8080/api/pedidos`
 
 
 
-&nbsp;Podés modificar los endpoints según la configuración de tus controladores.
+\### Frontend (React + Vite)
 
 
 
-&nbsp;Autor
+1\. Entrar en la carpeta `frontend/`
 
-Santiago Chavez - GitHub
+2\. Instalar dependencias:
+
+&nbsp;  ```bash
+
+&nbsp;  npm install
+
+&nbsp;  ```
+
+3\. Ejecutar el servidor de desarrollo:
+
+&nbsp;  ```bash
+
+&nbsp;  npm run dev
+
+&nbsp;  ```
+
+4\. Acceder a: `http://localhost:5176
+
+
+
+---
+
+
+
+\## Base de Datos
+
+
+
+Se utiliza una base en memoria H2, que se reinicia en cada ejecución.  
+
+Podés acceder a la consola de H2 en:  
+
+`http://localhost:8080/h2-console`  
+
+(JDBC URL: `jdbc:h2:mem:testdb`)
+
+
+
+---
 
 
 
 
+
+\## Autor
+
+Chavez Santiago Ezequiel
+
+
+
+Desarrollado como entrega final del curso Backend en java
 
