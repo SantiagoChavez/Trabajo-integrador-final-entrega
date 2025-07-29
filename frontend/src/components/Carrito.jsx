@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./Carrito.css";
 
 function Carrito() {
   const [productos, setProductos] = useState([]);
@@ -36,6 +37,21 @@ function Carrito() {
     }
   };
 
+  const quitarDelCarrito = (producto) => {
+    const itemEnCarrito = carrito.find((p) => p.id === producto.id);
+    if (!itemEnCarrito) return;
+
+    if (itemEnCarrito.cantidad === 1) {
+      setCarrito(carrito.filter((p) => p.id !== producto.id));
+    } else {
+      setCarrito(
+        carrito.map((p) =>
+          p.id === producto.id ? { ...p, cantidad: p.cantidad - 1 } : p
+        )
+      );
+    }
+  };
+
   const crearPedido = () => {
     const pedido = {
       estado: "nuevo",
@@ -65,13 +81,17 @@ function Carrito() {
   };
 
   return (
-    <div>
+    <div className="carrito-container">
       <h2>Productos disponibles</h2>
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <p className="carrito-ayuda">Usá los botones + y – para modificar las cantidades</p>
+      <ul className="producto-lista">
         {productos.map((p) => (
-          <li key={p.id}>
-            {p.nombre} - ${p.precio}{" "}
-            <button onClick={() => agregarAlCarrito(p)}>Agregar</button>
+          <li key={p.id} className="producto-item">
+            <span className="producto-info">{p.nombre} - ${p.precio}</span>
+            <div className="producto-botones">
+              <button onClick={() => agregarAlCarrito(p)}>+</button>
+              <button onClick={() => quitarDelCarrito(p)} disabled={!carrito.find(item => item.id === p.id)}>-</button>
+            </div>
           </li>
         ))}
       </ul>
@@ -81,14 +101,14 @@ function Carrito() {
         <p>No hay productos en el carrito.</p>
       ) : (
         <div>
-          <ul>
+          <ul className="carrito-lista">
             {carrito.map((item) => (
               <li key={item.id}>
                 {item.nombre} - Cantidad: {item.cantidad}
               </li>
             ))}
           </ul>
-          <button onClick={crearPedido}>Confirmar Pedido</button>
+          <button className="btn-confirmar" onClick={crearPedido}>Confirmar Pedido</button>
         </div>
       )}
     </div>
