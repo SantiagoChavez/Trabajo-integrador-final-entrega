@@ -9,7 +9,7 @@ import Inicio from './components/Inicio';
 
 function App() {
   return (
-    <Router>
+    <Router className="App">
       <Navbar />
       <main style={{ padding: '20px', textAlign: 'center' }}>
         <Routes>
