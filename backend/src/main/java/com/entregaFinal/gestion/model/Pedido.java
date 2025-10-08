@@ -1,23 +1,27 @@
 package com.entregaFinal.gestion.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.*;
 import java.util.*;
 
-@Entity
 public class Pedido {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private Date fecha = new Date();
     private String estado;
     private Double total;
-
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    @JsonManagedReference
     private List<LineaPedido> lineas;
+
+    // Constructores
+    public Pedido() {
+        this.lineas = new ArrayList<>();
+    }
+
+    public Pedido(Integer id, Date fecha, String estado, Double total, List<LineaPedido> lineas) {
+        this.id = id;
+        this.fecha = fecha;
+        this.estado = estado;
+        this.total = total;
+        this.lineas = lineas != null ? lineas : new ArrayList<>();
+    }
 
     // Getters y Setters
     public Integer getId() { return id; }

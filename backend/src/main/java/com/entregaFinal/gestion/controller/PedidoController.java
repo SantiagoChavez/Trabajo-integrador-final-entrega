@@ -25,8 +25,7 @@ public class PedidoController {
         if (pedido.getLineas() != null) {
             for (int i = 0; i < pedido.getLineas().size(); i++) {
                 System.out.println("Línea " + (i + 1));
-                System.out.println(" - Producto ID: " +
-                        (pedido.getLineas().get(i).getProducto() != null ? pedido.getLineas().get(i).getProducto().getId() : "null"));
+                System.out.println(" - Producto ID: " + pedido.getLineas().get(i).getProductoId());
                 System.out.println(" - Cantidad: " + pedido.getLineas().get(i).getCantidad());
             }
         } else {

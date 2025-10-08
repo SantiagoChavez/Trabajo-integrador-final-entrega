@@ -1,20 +1,30 @@
 package com.entregaFinal.gestion.model;
 
-import jakarta.persistence.*;
-
-@Entity
 public class Producto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     private String nombre;
     private String descripcion;
     private Double precio;
     private String categoria;
     private String imagenUrl;
     private Integer stock;
+
+    // Constructor vacío (necesario para Jackson/JSON)
+    public Producto() {
+    }
+
+    // Constructor completo (opcional, pero útil)
+    public Producto(Integer id, String nombre, String descripcion, Double precio,
+                    String categoria, String imagenUrl, Integer stock) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.categoria = categoria;
+        this.imagenUrl = imagenUrl;
+        this.stock = stock;
+    }
 
     // Getters y Setters
     public Integer getId() { return id; }

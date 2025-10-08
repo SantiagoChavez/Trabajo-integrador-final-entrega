@@ -2,11 +2,13 @@ package com.entregaFinal.gestion.service;
 
 import com.entregaFinal.gestion.model.Pedido;
 import com.entregaFinal.gestion.model.LineaPedido;
+import com.entregaFinal.gestion.model.Producto;
 import com.entregaFinal.gestion.repository.PedidoRepository;
 import com.entregaFinal.gestion.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,28 +22,36 @@ public class PedidoService {
 
     public Pedido createPedido(Pedido pedido) {
         double total = 0;
+        List<LineaPedido> lineasActualizadas = new ArrayList<>();
 
         for (LineaPedido linea : pedido.getLineas()) {
-            Integer productoId = linea.getProducto().getId();
+            Integer productoId = linea.getProductoId();
             var productoOptional = productoRepository.findById(productoId);
 
             if (productoOptional.isPresent()) {
-                var productoCompleto = productoOptional.get();
-                linea.setProducto(productoCompleto);  // seteamos el producto completo
-                total += productoCompleto.getPrecio() * linea.getCantidad();
+                Producto producto = productoOptional.get();
+
+                // Guardamos los datos del producto en la línea
+                linea.setProductoNombre(producto.getNombre());
+                linea.setProductoPrecio(producto.getPrecio());
+
+                // Calculamos el subtotal
+                total += linea.getSubtotal();
+
+                lineasActualizadas.add(linea);
             } else {
                 throw new RuntimeException("Producto con ID " + productoId + " no encontrado");
             }
-
-            linea.setPedido(pedido); // Asociamos el pedido a cada línea
         }
 
+        pedido.setLineas(lineasActualizadas);
         pedido.setTotal(total);
+        pedido.setEstado("PENDIENTE");
+
         return pedidoRepository.save(pedido);
     }
+
     public List<Pedido> getAllPedidos() {
         return pedidoRepository.findAll();
     }
-
 }
-

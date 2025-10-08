@@ -1,0 +1,14 @@
+[ {
+  "id" : 1,
+  "fecha" : 1759883290095,
+  "estado" : "PENDIENTE",
+  "total" : 567000.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : 5,
+    "productoNombre" : "Nvidia",
+    "productoPrecio" : 567000.0,
+    "cantidad" : 1,
+    "subtotal" : 567000.0
+  } ]
+} ]
