@@ -1,14 +1,88 @@
 [ {
   "id" : 1,
-  "fecha" : 1759883290095,
+  "fecha" : 1759961284158,
   "estado" : "PENDIENTE",
-  "total" : 567000.0,
+  "total" : 1320000.0,
   "lineas" : [ {
     "id" : null,
-    "productoId" : 5,
-    "productoNombre" : "Nvidia",
-    "productoPrecio" : 567000.0,
+    "productoId" : 1,
+    "productoNombre" : "Red Dragon",
+    "productoPrecio" : 120000.0,
     "cantidad" : 1,
-    "subtotal" : 567000.0
+    "subtotal" : 120000.0
+  }, {
+    "id" : null,
+    "productoId" : 2,
+    "productoNombre" : "LG",
+    "productoPrecio" : 1200000.0,
+    "cantidad" : 1,
+    "subtotal" : 1200000.0
+  } ]
+}, {
+  "id" : 2,
+  "fecha" : 1759961347262,
+  "estado" : "PENDIENTE",
+  "total" : 120000.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : 1,
+    "productoNombre" : "Red Dragon",
+    "productoPrecio" : 120000.0,
+    "cantidad" : 1,
+    "subtotal" : 120000.0
+  } ]
+}, {
+  "id" : 3,
+  "fecha" : 1759961567822,
+  "estado" : "PENDIENTE",
+  "total" : 1324232.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : 3,
+    "productoNombre" : "Logitech",
+    "productoPrecio" : 4232.0,
+    "cantidad" : 1,
+    "subtotal" : 4232.0
+  }, {
+    "id" : null,
+    "productoId" : 2,
+    "productoNombre" : "LG",
+    "productoPrecio" : 1200000.0,
+    "cantidad" : 1,
+    "subtotal" : 1200000.0
+  }, {
+    "id" : null,
+    "productoId" : 1,
+    "productoNombre" : "Red Dragon",
+    "productoPrecio" : 120000.0,
+    "cantidad" : 1,
+    "subtotal" : 120000.0
+  } ]
+}, {
+  "id" : 4,
+  "fecha" : 1759970921517,
+  "estado" : "PENDIENTE",
+  "total" : 1324232.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : 1,
+    "productoNombre" : "Red Dragon",
+    "productoPrecio" : 120000.0,
+    "cantidad" : 1,
+    "subtotal" : 120000.0
+  }, {
+    "id" : null,
+    "productoId" : 3,
+    "productoNombre" : "Logitech",
+    "productoPrecio" : 4232.0,
+    "cantidad" : 1,
+    "subtotal" : 4232.0
+  }, {
+    "id" : null,
+    "productoId" : 2,
+    "productoNombre" : "LG",
+    "productoPrecio" : 1200000.0,
+    "cantidad" : 1,
+    "subtotal" : 1200000.0
   } ]
 } ]

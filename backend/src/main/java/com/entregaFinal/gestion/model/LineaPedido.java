@@ -1,5 +1,8 @@
 package com.entregaFinal.gestion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LineaPedido {
 
     private Integer id;

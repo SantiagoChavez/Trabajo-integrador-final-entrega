@@ -1,33 +1,33 @@
 [ {
   "id" : 1,
-  "nombre" : "Laptop HP",
-  "descripcion" : "Laptop potente para trabajo",
-  "precio" : 45000.0,
-  "categoria" : "Electrónica",
-  "imagenUrl" : "https://via.placeholder.com/150",
-  "stock" : 10
+  "nombre" : "Red Dragon",
+  "descripcion" : "Teclado mecanico rgb",
+  "precio" : 120000.0,
+  "categoria" : "Perisfericos",
+  "imagenUrl" : null,
+  "stock" : 456
 }, {
   "id" : 2,
-  "nombre" : "Mouse Logitech",
-  "descripcion" : "Mouse inalámbrico",
-  "precio" : 2500.0,
-  "categoria" : "Accesorios",
-  "imagenUrl" : "https://via.placeholder.com/150",
-  "stock" : 50
-}, {
-  "id" : 4,
   "nombre" : "LG",
   "descripcion" : "Monitor Ultrawide 29\"",
-  "precio" : 1256000.0,
+  "precio" : 1200000.0,
   "categoria" : "Pantallas",
   "imagenUrl" : null,
-  "stock" : 55
+  "stock" : 30
 }, {
-  "id" : 5,
+  "id" : 3,
+  "nombre" : "Logitech",
+  "descripcion" : "Mouse inalambrico rgb",
+  "precio" : 4232.0,
+  "categoria" : "Perisfericos",
+  "imagenUrl" : null,
+  "stock" : 656
+}, {
+  "id" : 4,
   "nombre" : "Nvidia",
-  "descripcion" : "Placa de video Nvidia Gigabyte Eagle GeForce RTX 40 Series RTX 4060 OC Edition 8GBPlaca de video Nvidia Gigabyte ",
-  "precio" : 567000.0,
+  "descripcion" : "Placa de video Nvidia Gigabyte Eagle GeForce RTX 40 ",
+  "precio" : 4.5673E7,
   "categoria" : "Hardware",
   "imagenUrl" : null,
-  "stock" : 60
+  "stock" : 45
 } ]
