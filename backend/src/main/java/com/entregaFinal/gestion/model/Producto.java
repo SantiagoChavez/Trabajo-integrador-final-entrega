@@ -1,8 +1,14 @@
 package com.entregaFinal.gestion.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "productos") // indica que los documentos van a esta colección
 public class Producto {
 
-    private Integer id;
+    @Id
+    private String id; // en Mongo el id es String (ObjectId), no Integer
+
     private String nombre;
     private String descripcion;
     private Double precio;
@@ -10,14 +16,12 @@ public class Producto {
     private String imagenUrl;
     private Integer stock;
 
-    // Constructor vacío (necesario para Jackson/JSON)
-    public Producto() {
-    }
+    // Constructor vacío (necesario para la deserialización)
+    public Producto() {}
 
-    // Constructor completo (opcional, pero útil)
-    public Producto(Integer id, String nombre, String descripcion, Double precio,
+    // Constructor completo (sin el id, ya que Mongo lo genera automáticamente)
+    public Producto(String nombre, String descripcion, Double precio,
                     String categoria, String imagenUrl, Integer stock) {
-        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
@@ -27,8 +31,8 @@ public class Producto {
     }
 
     // Getters y Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

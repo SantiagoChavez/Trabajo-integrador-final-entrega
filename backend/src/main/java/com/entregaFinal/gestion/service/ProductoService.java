@@ -18,7 +18,7 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
-    public Optional<Producto> getProductoById(Integer id) {
+    public Optional<Producto> getProductoById(String id) {
         return productoRepository.findById(id);
     }
 
@@ -26,7 +26,7 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    public Producto updateProducto(Integer id, Producto producto) {
+    public Producto updateProducto(String id, Producto producto) {
         if (productoRepository.existsById(id)) {
             producto.setId(id);
             return productoRepository.save(producto);
@@ -34,7 +34,7 @@ public class ProductoService {
         return null;
     }
 
-    public boolean deleteProducto(Integer id) {
+    public boolean deleteProducto(String id) {
         if (productoRepository.existsById(id)) {
             productoRepository.deleteById(id);
             return true;

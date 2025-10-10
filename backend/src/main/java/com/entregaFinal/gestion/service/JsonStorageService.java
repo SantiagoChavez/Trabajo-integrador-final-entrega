@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class JsonStorageService<T> {
@@ -22,7 +23,6 @@ public class JsonStorageService<T> {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
 
-        // Crear carpeta datos si no existe
         try {
             Files.createDirectories(Paths.get(dataDirectory));
         } catch (IOException e) {
@@ -54,10 +54,7 @@ public class JsonStorageService<T> {
         }
     }
 
-    public Integer generateId(List<T> items, java.util.function.Function<T, Integer> idExtractor) {
-        return items.stream()
-                .map(idExtractor)
-                .max(Integer::compareTo)
-                .orElse(0) + 1;
+    public String generateId(List<T> items, java.util.function.Function<T, String> idExtractor) {
+        return UUID.randomUUID().toString();
     }
 }

@@ -1,88 +1,167 @@
 [ {
-  "id" : 1,
+  "id" : "1",
   "fecha" : 1759961284158,
   "estado" : "PENDIENTE",
   "total" : 1320000.0,
   "lineas" : [ {
     "id" : null,
-    "productoId" : 1,
+    "productoId" : "1",
     "productoNombre" : "Red Dragon",
     "productoPrecio" : 120000.0,
     "cantidad" : 1,
     "subtotal" : 120000.0
   }, {
     "id" : null,
-    "productoId" : 2,
+    "productoId" : "2",
     "productoNombre" : "LG",
     "productoPrecio" : 1200000.0,
     "cantidad" : 1,
     "subtotal" : 1200000.0
   } ]
 }, {
-  "id" : 2,
+  "id" : "2",
   "fecha" : 1759961347262,
   "estado" : "PENDIENTE",
   "total" : 120000.0,
   "lineas" : [ {
     "id" : null,
-    "productoId" : 1,
+    "productoId" : "1",
     "productoNombre" : "Red Dragon",
     "productoPrecio" : 120000.0,
     "cantidad" : 1,
     "subtotal" : 120000.0
   } ]
 }, {
-  "id" : 3,
+  "id" : "3",
   "fecha" : 1759961567822,
   "estado" : "PENDIENTE",
   "total" : 1324232.0,
   "lineas" : [ {
     "id" : null,
-    "productoId" : 3,
+    "productoId" : "3",
     "productoNombre" : "Logitech",
     "productoPrecio" : 4232.0,
     "cantidad" : 1,
     "subtotal" : 4232.0
   }, {
     "id" : null,
-    "productoId" : 2,
+    "productoId" : "2",
     "productoNombre" : "LG",
     "productoPrecio" : 1200000.0,
     "cantidad" : 1,
     "subtotal" : 1200000.0
   }, {
     "id" : null,
-    "productoId" : 1,
+    "productoId" : "1",
     "productoNombre" : "Red Dragon",
     "productoPrecio" : 120000.0,
     "cantidad" : 1,
     "subtotal" : 120000.0
   } ]
 }, {
-  "id" : 4,
+  "id" : "4",
   "fecha" : 1759970921517,
   "estado" : "PENDIENTE",
   "total" : 1324232.0,
   "lineas" : [ {
     "id" : null,
-    "productoId" : 1,
+    "productoId" : "1",
     "productoNombre" : "Red Dragon",
     "productoPrecio" : 120000.0,
     "cantidad" : 1,
     "subtotal" : 120000.0
   }, {
     "id" : null,
-    "productoId" : 3,
+    "productoId" : "3",
     "productoNombre" : "Logitech",
     "productoPrecio" : 4232.0,
     "cantidad" : 1,
     "subtotal" : 4232.0
   }, {
     "id" : null,
-    "productoId" : 2,
+    "productoId" : "2",
     "productoNombre" : "LG",
     "productoPrecio" : 1200000.0,
     "cantidad" : 1,
     "subtotal" : 1200000.0
+  } ]
+}, {
+  "id" : "d8059972-5148-4459-b090-4c0776d8a495",
+  "fecha" : 1760061697367,
+  "estado" : "PENDIENTE",
+  "total" : 1420000.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : "68e868c8b04302580fd9b7a7",
+    "productoNombre" : "Red Dragon",
+    "productoPrecio" : 120000.0,
+    "cantidad" : 1,
+    "subtotal" : 120000.0
+  }, {
+    "id" : null,
+    "productoId" : "68e868f9b04302580fd9b7a8",
+    "productoNombre" : "LG",
+    "productoPrecio" : 1300000.0,
+    "cantidad" : 1,
+    "subtotal" : 1300000.0
+  } ]
+}, {
+  "id" : "ad7b6f57-3952-4348-989e-b8ee9b7d44b5",
+  "fecha" : 1760061970249,
+  "estado" : "PENDIENTE",
+  "total" : 240000.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : "68e868c8b04302580fd9b7a7",
+    "productoNombre" : "Red Dragon",
+    "productoPrecio" : 120000.0,
+    "cantidad" : 2,
+    "subtotal" : 240000.0
+  } ]
+}, {
+  "id" : "1495a93e-fd8b-4112-8a47-43f41c8bd1d7",
+  "fecha" : 1760062201296,
+  "estado" : "PENDIENTE",
+  "total" : 3900000.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : "68e868f9b04302580fd9b7a8",
+    "productoNombre" : "LG",
+    "productoPrecio" : 1300000.0,
+    "cantidad" : 3,
+    "subtotal" : 3900000.0
+  } ]
+}, {
+  "id" : "6f62be58-7ebb-489b-b78a-79a528d30dbf",
+  "fecha" : 1760062498901,
+  "estado" : "PENDIENTE",
+  "total" : 480000.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : "68e868c8b04302580fd9b7a7",
+    "productoNombre" : "Red Dragon",
+    "productoPrecio" : 120000.0,
+    "cantidad" : 4,
+    "subtotal" : 480000.0
+  } ]
+}, {
+  "id" : "aac2bf4a-aab9-416e-966a-96382d77e549",
+  "fecha" : 1760062718848,
+  "estado" : "PENDIENTE",
+  "total" : 6620000.0,
+  "lineas" : [ {
+    "id" : null,
+    "productoId" : "68e868f9b04302580fd9b7a8",
+    "productoNombre" : "LG",
+    "productoPrecio" : 1300000.0,
+    "cantidad" : 5,
+    "subtotal" : 6500000.0
+  }, {
+    "id" : null,
+    "productoId" : "68e868c8b04302580fd9b7a7",
+    "productoNombre" : "Red Dragon",
+    "productoPrecio" : 120000.0,
+    "cantidad" : 1,
+    "subtotal" : 120000.0
   } ]
 } ]

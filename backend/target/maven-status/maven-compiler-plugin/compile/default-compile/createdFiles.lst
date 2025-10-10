@@ -1,3 +1,14 @@
+com\entregaFinal\gestion\model\Pedido.class
 com\entregaFinal\gestion\service\JsonStorageService.class
-com\entregaFinal\gestion\repository\PedidoRepository$1.class
-com\entregaFinal\gestion\repository\ProductoRepository$1.class
+com\entregaFinal\gestion\service\PedidoService.class
+com\entregaFinal\gestion\service\ProductoService.class
+com\entregaFinal\gestion\model\LineaPedido.class
+com\entregaFinal\gestion\controller\ProductoController.class
+com\entregaFinal\gestion\model\Producto.class
+com\entregaFinal\gestion\repository\ProductoRepository.class
+com\entregaFinal\gestion\WebConfig.class
+com\entregaFinal\gestion\exception\StockInsuficienteException.class
+com\entregaFinal\gestion\PreentregaJavaGestionApplication.class
+com\entregaFinal\gestion\WebConfig$1.class
+com\entregaFinal\gestion\controller\PedidoController.class
+com\entregaFinal\gestion\repository\PedidoRepository.class

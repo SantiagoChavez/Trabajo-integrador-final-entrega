@@ -1,21 +1,25 @@
 package com.entregaFinal.gestion.model;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.*;
 
+@Document(collection = "pedidos")
 public class Pedido {
 
-    private Integer id;
+    @Id
+    private String id;
     private Date fecha = new Date();
     private String estado;
     private Double total;
     private List<LineaPedido> lineas;
 
-    // Constructores
     public Pedido() {
         this.lineas = new ArrayList<>();
     }
 
-    public Pedido(Integer id, Date fecha, String estado, Double total, List<LineaPedido> lineas) {
+    public Pedido(String id, Date fecha, String estado, Double total, List<LineaPedido> lineas) {
         this.id = id;
         this.fecha = fecha;
         this.estado = estado;
@@ -23,19 +27,43 @@ public class Pedido {
         this.lineas = lineas != null ? lineas : new ArrayList<>();
     }
 
-    // Getters y Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public Date getFecha() { return fecha; }
-    public void setFecha(Date fecha) { this.fecha = fecha; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public Date getFecha() {
+        return fecha;
+    }
 
-    public Double getTotal() { return total; }
-    public void setTotal(Double total) { this.total = total; }
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
+    }
 
-    public List<LineaPedido> getLineas() { return lineas; }
-    public void setLineas(List<LineaPedido> lineas) { this.lineas = lineas; }
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
+    }
+
+    public List<LineaPedido> getLineas() {
+        return lineas;
+    }
+
+    public void setLineas(List<LineaPedido> lineas) {
+        this.lineas = lineas;
+    }
 }

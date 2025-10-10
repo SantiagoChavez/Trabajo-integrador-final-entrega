@@ -25,17 +25,15 @@ public class PedidoService {
         List<LineaPedido> lineasActualizadas = new ArrayList<>();
 
         for (LineaPedido linea : pedido.getLineas()) {
-            Integer productoId = linea.getProductoId();
+            String productoId = linea.getProductoId();
             var productoOptional = productoRepository.findById(productoId);
 
             if (productoOptional.isPresent()) {
                 Producto producto = productoOptional.get();
 
-                // Guardamos los datos del producto en la línea
                 linea.setProductoNombre(producto.getNombre());
                 linea.setProductoPrecio(producto.getPrecio());
 
-                // Calculamos el subtotal
                 total += linea.getSubtotal();
 
                 lineasActualizadas.add(linea);

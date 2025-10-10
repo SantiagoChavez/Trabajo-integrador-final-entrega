@@ -6,16 +6,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class LineaPedido {
 
     private Integer id;
-    private Integer productoId;  // Solo guardamos el ID del producto
-    private String productoNombre;  // Para mostrar en el pedido
-    private Double productoPrecio;  // Precio al momento de la compra
+    private String productoId;  // ✅ CAMBIAR de Integer a String
+    private String productoNombre;
+    private Double productoPrecio;
     private Integer cantidad;
 
     // Constructores
     public LineaPedido() {
     }
 
-    public LineaPedido(Integer id, Integer productoId, String productoNombre,
+    public LineaPedido(Integer id, String productoId, String productoNombre,
                        Double productoPrecio, Integer cantidad) {
         this.id = id;
         this.productoId = productoId;
@@ -28,8 +28,8 @@ public class LineaPedido {
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
-    public Integer getProductoId() { return productoId; }
-    public void setProductoId(Integer productoId) { this.productoId = productoId; }
+    public String getProductoId() { return productoId; }  // ✅ CAMBIAR retorno a String
+    public void setProductoId(String productoId) { this.productoId = productoId; }  // ✅ CAMBIAR parámetro a String
 
     public String getProductoNombre() { return productoNombre; }
     public void setProductoNombre(String productoNombre) { this.productoNombre = productoNombre; }
