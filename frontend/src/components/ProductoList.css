@@ -1,0 +1,67 @@
+.tabla-productos {
+  width: 90%;
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-family: Arial, sans-serif;
+}
+
+.tabla-productos th,
+.tabla-productos td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.tabla-productos th {
+  background-color: #ffc0c0;
+}
+
+.btn-eliminar {
+  background-color: #ffb3b3;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-eliminar:hover {
+  background-color: #ff8f8f;
+}
+
+button {
+  margin: 2px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+input {
+  padding: 4px 6px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Botones personalizados */
+button:contains("Editar") {
+  background-color: #d9d9ff;
+  color: #333;
+}
+
+button:contains("Guardar"),
+button:contains("💾") {
+  background-color: #b3f0b3;
+  color: #000;
+}
+
+button:contains("Cancelar"),
+button:contains("✖") {
+  background-color: #f0b3b3;
+  color: #000;
+}
