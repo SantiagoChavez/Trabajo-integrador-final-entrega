@@ -103,7 +103,7 @@ function App() {
       
       <main>
         <Routes>
-          <Route path="/" element={<Inicio />} />
+          <Route path="/" element={<Inicio usuario={usuario} />} />
           
           <Route path="/login" element={<Login onLogin={handleLogin} />} />
 

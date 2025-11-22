@@ -1,32 +1,63 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Inicio.css';
-// Asegúrate de que esta ruta apunte a tu archivo renombrado "logo.jpg" en assets
-import logoImg from '../assets/logo.jpg'; 
+import React, { useState } from 'react'; // 1. Importamos useState
+import { useNavigate } from 'react-router-dom';
+import './Inicio.css'; 
 
-const Inicio = () => {
+function Inicio({ usuario }) {
+  const navigate = useNavigate();
+  
+  // 2. Nuevo estado para controlar si se muestra la alerta personalizada
+  const [mostrarAlerta, setMostrarAlerta] = useState(false);
+
+  const navegarA = (ruta) => {
+    if (usuario) {
+      navigate(ruta);
+    } else {
+      // 3. En vez del 'alert()' feo, activamos nuestra alerta personalizada
+      setMostrarAlerta(true);
+      // No redirigimos inmediatamente, esperamos a que el usuario lea y clickee.
+    }
+  };
+
+  // 4. Función para cerrar la alerta e ir al login
+  const irAlLogin = () => {
+    setMostrarAlerta(false);
+    navigate('/login');
+  };
+
   return (
-    <div className="inicio-contenedor">
-      <div className="inicio-contenido">
-        
-        {/* Imagen del Logo */}
-        <img src={logoImg} alt="Logo UTN" className="logo-principal" />
-        
-        {/* Texto corregido */}
-        <h1 className="titulo-overlay">Tienda de Insumos Informáticos</h1>
+    <div className="inicio-container">
+      
+      {/* 5. AQUÍ ESTÁ LA MAGIA: El cartel flotante personalizado */}
+      {/* Solo se muestra si 'mostrarAlerta' es true */}
+      {mostrarAlerta && (
+        <div className="alerta-backdrop">
+          <div className="alerta-neon-flotante">
+             <h3 style={{ color: '#00d2ff', marginBottom: '10px' }}>🔒 Acceso Restringido</h3>
+             <p>Por favor, inicia sesión para acceder al catálogo y realizar compras.</p>
+             <button className="btn-alerta" onClick={irAlLogin}>
+               Entendido, ir a Loguearme
+             </button>
+          </div>
+        </div>
+      )}
+
+      <div className="hero-section">
+        <div className="logo-container">
+           <img src="/logo.jpg" alt="Logo Tienda Gamer" />
+        </div>
+        <h1 className="titulo-principal">Tienda de Insumos Informáticos</h1>
         <p className="subtitulo">Todo lo que necesitas para tu computadora en un solo lugar</p>
-        
         <div className="botones-accion">
-          <Link to="/productos" className="btn btn-primario">
+          <button className="btn-catalogo" onClick={() => navegarA('/productos')}>
             📦 Ver Catálogo
-          </Link>
-          <Link to="/carrito" className="btn btn-secundario">
+          </button>
+          <button className="btn-carrito" onClick={() => navegarA('/carrito')}>
             🛒 Ir al Carrito
-          </Link>
+          </button>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Inicio;
