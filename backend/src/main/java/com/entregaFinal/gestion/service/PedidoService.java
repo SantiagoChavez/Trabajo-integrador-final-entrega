@@ -29,6 +29,9 @@ public class PedidoService {
 
         for (LineaPedido linea : pedido.getLineas()) {
             String productoId = linea.getProductoId();
+            if (productoId == null) {
+                throw new RuntimeException("El ID del producto no puede ser nulo");
+            }
             var productoOptional = productoRepository.findById(productoId);
 
             if (productoOptional.isPresent()) {
