@@ -1,0 +1,192 @@
+/* --- FONDO GENERAL SUAVE --- */
+.admin-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  /* Cambio: De negro puro a un gris oscuro azulado (Dark Slate) */
+  background-color: #1a1a24; 
+  color: #c0c0d0; /* Texto gris claro, no blanco puro */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-sizing: border-box;
+}
+
+/* --- TÍTULOS --- */
+.admin-title {
+  color: #82b1ff; /* Azul suave pastel */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 600;
+  /* Quitamos el text-shadow fuerte para que no encandile */
+}
+
+.section-title {
+  color: #e0e0e0;
+  border-bottom: 2px solid #3f51b5; /* Línea más oscura y sobria */
+  display: inline-block;
+  padding-bottom: 5px;
+  margin-bottom: 25px;
+  font-size: 1.4rem;
+}
+
+/* --- TARJETAS (SOBRIAS) --- */
+.admin-card {
+  background: #23232e; /* Fondo sólido, no transparente */
+  border: 1px solid #333; /* Borde sutil */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  border-radius: 12px;
+  padding: 40px;
+  margin: 0 auto 40px auto;
+  max-width: 800px;
+  text-align: center;
+}
+
+/* --- FORMULARIOS --- */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.admin-form input {
+  background-color: #2b2b36; /* Un poco más claro que el fondo */
+  border: 1px solid #444;
+  color: #eee;
+  padding: 12px;
+  border-radius: 6px;
+  outline: none;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.admin-form input:focus {
+  border-color: #82b1ff; /* Acento suave al escribir */
+}
+
+.admin-form input::placeholder {
+  color: #777;
+}
+
+/* --- BOTÓN DE ENVÍO --- */
+.btn-admin-submit {
+  background-color: #3f51b5; /* Azul índigo mate */
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px; /* Menos redondo */
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.btn-admin-submit:hover {
+  background-color: #5c6bc0; /* Un poco más claro al pasar el mouse */
+}
+
+/* --- NOTIFICACIÓN FLOTANTE (REUTILIZABLE) --- */
+.notificacion-oval {
+  position: fixed;
+  top: 50%;              /* Centrado Vertical */
+  left: 50%;             /* Centrado Horizontal */
+  transform: translate(-50%, -50%);
+  
+  background-color: rgba(30, 30, 40, 0.95); /* Fondo oscuro semitransparente */
+  color: #00d2ff;        /* Texto Cyan Neón */
+  border: 1px solid #00d2ff;
+  
+  padding: 20px 40px;
+  border-radius: 50px;   
+  
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: center;
+  
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); /* Resplandor suave */
+  z-index: 9999;
+  
+  animation: aparecerCentro 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes aparecerCentro {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* --- MODAL DE CONFIRMACIÓN (ESTILO GAMER) --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85); /* Fondo muy oscuro para bloquear */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; /* Por encima de todo */
+  backdrop-filter: blur(4px); /* Efecto borroso pro */
+}
+
+.modal-neon {
+  background-color: #1a1a24;
+  border: 1px solid #ff5252; /* Borde Rojo para acciones peligrosas */
+  box-shadow: 0 0 20px rgba(255, 82, 82, 0.2);
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  text-align: center;
+  animation: aparecerSuave 0.2s ease-out;
+}
+
+.modal-neon h3 {
+  color: #ff5252;
+  margin-top: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modal-neon p {
+  color: #ccc;
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+.modal-botones {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-cancelar {
+  background: transparent;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-confirmar-rojo {
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #ff5252;
+  color: #ff5252;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-confirmar-rojo:hover {
+  background: #ff5252;
+  color: white;
+  box-shadow: 0 0 15px rgba(255, 82, 82, 0.5);
+}

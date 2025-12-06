@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
-function Navbar({ usuario, onLogout, carrito }) {
+function Navbar({ usuario, onLogout, carrito, busqueda, setBusqueda }) {
   const navigate = useNavigate();
 
   const handleSalir = () => {
@@ -15,26 +15,45 @@ function Navbar({ usuario, onLogout, carrito }) {
   return (
     <nav className="navbar">
       <ul>
-        {/* 1. INICIO */}
+        {/* Siempre visible: Inicio */}
         <li><Link to="/">🏠 Inicio</Link></li>
         
-        {/* 2. CATÁLOGO */}
-        <li><Link to="/productos">📦 Catálogo</Link></li>
-        
-        {/* 3. CARRITO (Ahora va tercero) */}
-        <li>
-          <Link to="/carrito" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            🛒 Carrito
-            {cantidadTotal > 0 && (
-              <span className="cart-badge">{cantidadTotal}</span>
-            )}
-          </Link>
-        </li>
+        {/* --- SOLO VISIBLE SI HAY USUARIO --- */}
+        {usuario && (
+          <>
+            <li><Link to="/productos">📦 Catálogo</Link></li>
 
-        {/* 4. MIS PEDIDOS (Ahora va cuarto) */}
-        <li><Link to="/pedidos">📄 Mis Pedidos</Link></li>
-        
-        {/* LÓGICA DE USUARIO / ADMIN (Va a la derecha del todo) */}
+            {/* BARRA DE BÚSQUEDA (Solo para usuarios) */}
+            <li style={{ flexGrow: 1, margin: '0 20px', maxWidth: '400px' }}>
+              <input 
+                type="text"
+                placeholder="🔍 Buscar producto..."
+                value={busqueda}
+                onChange={(e) => {
+                    setBusqueda(e.target.value);
+                    navigate('/productos');
+                }}
+                style={{
+                    width: '100%',
+                    padding: '8px',
+                    borderRadius: '20px',
+                    border: 'none',
+                    outline: 'none'
+                }}
+              />
+            </li>
+
+            <li>
+              <Link to="/carrito" style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                🛒 <span className="cart-badge">{cantidadTotal}</span>
+              </Link>
+            </li>
+            
+            <li><Link to="/pedidos">📄 Mis Pedidos</Link></li>
+          </>
+        )}
+
+        {/* --- LADO DERECHO (LOGIN / LOGOUT) --- */}
         {usuario ? (
           <>
             {usuario.rol === 'ADMIN' && (
@@ -52,7 +71,7 @@ function Navbar({ usuario, onLogout, carrito }) {
           </>
         ) : (
           <li style={{ marginLeft: 'auto' }}>
-            <Link to="/login" style={{ backgroundColor: '#007bff', padding: '5px 10px', borderRadius: '4px' }}>
+            <Link to="/login" style={{ backgroundColor: '#007bff', padding: '5px 10px', borderRadius: '4px', color: 'white', textDecoration: 'none' }}>
               🔑 Iniciar Sesión
             </Link>
           </li>

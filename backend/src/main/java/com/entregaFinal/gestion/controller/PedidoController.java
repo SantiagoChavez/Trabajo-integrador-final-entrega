@@ -38,4 +38,9 @@ public class PedidoController {
     public List<Pedido> getAllPedidos() {
         return pedidoService.getAllPedidos();
     }
+
+    @PutMapping("/{id}/estado")
+    public Pedido actualizarEstado(@PathVariable String id, @RequestParam String nuevoEstado) {
+        return pedidoService.updateEstado(id, nuevoEstado);
+    }
 }

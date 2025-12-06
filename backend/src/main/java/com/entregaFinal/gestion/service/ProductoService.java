@@ -19,36 +19,41 @@ public class ProductoService {
     }
 
     public Optional<Producto> getProductoById(String id) {
-        if (id == null) {
-            return Optional.empty();
-        }
         return productoRepository.findById(id);
     }
 
     public Producto addProducto(Producto producto) {
-        String id = producto.getId();
-        if (id != null && productoRepository.existsById(id)) {
-            return null; // No se puede agregar un producto con un ID que ya existe
-        }
         return productoRepository.save(producto);
     }
 
-    public Producto updateProducto(String id, Producto producto) {
-        if (id == null) {
-            return null;
-        }
-        if (productoRepository.existsById(id)) {
-            producto.setId(id);
-            return productoRepository.save(producto);
-        }
-        return null;
+    public Producto updateProducto(String id, Producto productoActualizado) {
+        return productoRepository.findById(id).map(productoExistente -> {
+            // Actualizamos campo por campo solo si el dato que llega no es null
+            
+            if(productoActualizado.getNombre() != null) 
+                productoExistente.setNombre(productoActualizado.getNombre());
+            
+            if(productoActualizado.getDescripcion() != null) 
+                productoExistente.setDescripcion(productoActualizado.getDescripcion());
+            
+            if(productoActualizado.getPrecio() != null) 
+                productoExistente.setPrecio(productoActualizado.getPrecio());
+            
+            if(productoActualizado.getCategoria() != null) 
+                productoExistente.setCategoria(productoActualizado.getCategoria());
+            
+            if(productoActualizado.getStock() != null) 
+                productoExistente.setStock(productoActualizado.getStock());
+            
+            // Agregado para soportar la edición de imagen que hicimos en el Frontend
+            if(productoActualizado.getImagenUrl() != null) 
+                productoExistente.setImagenUrl(productoActualizado.getImagenUrl());
+
+            return productoRepository.save(productoExistente);
+        }).orElse(null);
     }
 
     public boolean deleteProducto(String id) {
-        if (id == null) {
-            return false;
-        }
-
         if (productoRepository.existsById(id)) {
             productoRepository.deleteById(id);
             return true;

@@ -3,7 +3,6 @@ C:\TalentoTech\Trabajo-entregaFinal\backend\src\main\java\com\entregaFinal\gesti
 C:\TalentoTech\Trabajo-entregaFinal\backend\src\main\java\com\entregaFinal\gestion\model\Producto.java
 C:\TalentoTech\Trabajo-entregaFinal\backend\src\main\java\com\entregaFinal\gestion\controller\AuthController.java
 C:\TalentoTech\Trabajo-entregaFinal\backend\src\main\java\com\entregaFinal\gestion\model\Usuario.java
-C:\TalentoTech\Trabajo-entregaFinal\backend\src\main\java\com\entregaFinal\gestion\service\JsonStorageService.java
 C:\TalentoTech\Trabajo-entregaFinal\backend\src\main\java\com\entregaFinal\gestion\controller\PedidoController.java
 C:\TalentoTech\Trabajo-entregaFinal\backend\src\main\java\com\entregaFinal\gestion\exception\StockInsuficienteException.java
 C:\TalentoTech\Trabajo-entregaFinal\backend\src\main\java\com\entregaFinal\gestion\model\Pedido.java

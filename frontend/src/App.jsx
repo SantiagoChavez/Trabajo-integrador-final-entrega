@@ -8,7 +8,8 @@ import Pedidos from './components/Pedidos';
 import Inicio from './components/Inicio';
 import Categorias from './components/Categorias';
 import Login from './components/Login';
-import AdminPedidos from './components/AdminPedidos'; // <--- IMPORTANTE
+import AdminPedidos from './components/AdminPedidos'; 
+import './components/Admin.css'; // <--- IMPORTANTE: Importamos los estilos nuevos
 
 const RutaPrivadaAdmin = ({ usuario, children }) => {
   if (!usuario) return <Navigate to="/login" />;
@@ -19,6 +20,7 @@ const RutaPrivadaAdmin = ({ usuario, children }) => {
 function App() {
   const [carrito, setCarrito] = useState([]);
   const [usuario, setUsuario] = useState(null);
+  const [busqueda, setBusqueda] = useState(""); 
 
   const handleLogin = (userData) => setUsuario(userData);
   const handleLogout = () => { setUsuario(null); setCarrito([]); };
@@ -50,7 +52,14 @@ function App() {
 
   return (
     <Router>
-      <Navbar usuario={usuario} onLogout={handleLogout} carrito={carrito} />
+      <Navbar 
+        usuario={usuario} 
+        onLogout={handleLogout} 
+        carrito={carrito} 
+        busqueda={busqueda} 
+        setBusqueda={setBusqueda} 
+      />
+      
       <main>
         <Routes>
           <Route path="/" element={<Inicio usuario={usuario} />} />
@@ -58,7 +67,7 @@ function App() {
           
           <Route path="/productos" element={
              <div style={{ padding: '20px', textAlign: 'center' }}>
-               <ProductoList agregarAlCarrito={agregarAlCarrito} esAdmin={false} />
+               <ProductoList agregarAlCarrito={agregarAlCarrito} esAdmin={false} busqueda={busqueda} />
              </div>
           } />
 
@@ -71,25 +80,32 @@ function App() {
           <Route path="/pedidos" element={<div style={{ padding: '20px' }}><Pedidos /></div>} />
           <Route path="/categorias" element={<Categorias />} />
 
-          {/* --- ZONA ADMIN --- */}
+          {/* --- ZONA ADMIN (RENOVADA) --- */}
           <Route path="/gestion" element={
             <RutaPrivadaAdmin usuario={usuario}>
-              <div style={{ padding: '20px', textAlign: 'center', backgroundColor: '#fffbf2', minHeight: '100vh' }}>
-                <h1 style={{ color: '#d35400' }}>⚙️ Panel de Operaciones</h1>
+              <div className="admin-container">
                 
-                {/* 1. ALTA */}
-                <div style={{ border: '2px dashed #d35400', padding: '20px', margin: '20px auto', maxWidth: '800px', background: 'white', borderRadius: '8px' }}>
-                   <h3>➕ Dar de Alta Nuevo Producto</h3>
+                <h1 className="admin-title">⚙️ Panel de Operaciones</h1>
+                
+                {/* 1. Tarjeta de Alta */}
+                <div className="admin-card">
+                   <h3 className="section-title">➕ Dar de Alta Nuevo Producto</h3>
                    <AgregarProducto />
                 </div>
                 
-                {/* 2. LISTADO Y STOCK */}
-                <h3>📝 Modificar / Eliminar Stock</h3>
-                <ProductoList esAdmin={true} />
+                {/* 2. Tarjeta de Listado */}
+                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                    <h3 className="section-title" style={{textAlign:'center', display:'block'}}>📝 Gestión de Stock</h3>
+                    {/* Le pasamos busqueda vacía o la global, según prefieras. Aquí usa la global */}
+                    <ProductoList esAdmin={true} busqueda={busqueda} />
+                </div>
 
-                {/* 3. NUEVO: FACTURACIÓN Y ENVÍOS */}
-                <hr style={{margin: '40px 0'}} />
-                <AdminPedidos />  {/* <--- AQUÍ ESTÁ LA MAGIA */}
+                <hr style={{ margin: '60px auto', width: '80%', borderColor: '#333' }} />
+                
+                {/* 3. Pedidos y Facturación */}
+                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                  <AdminPedidos />
+                </div>
                 
               </div>
             </RutaPrivadaAdmin>

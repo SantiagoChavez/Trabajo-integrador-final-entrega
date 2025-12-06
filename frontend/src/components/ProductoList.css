@@ -1,67 +1,110 @@
 .tabla-productos {
-  width: 90%;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
   border-collapse: collapse;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #23232e; 
+  color: #cfcfcf; 
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
 }
 
 .tabla-productos th,
 .tabla-productos td {
-  border: 1px solid #ccc;
-  padding: 8px;
+  border-bottom: 1px solid #333;
+  padding: 15px;
   text-align: center;
+  vertical-align: middle; /* Alinea verticalmente los inputs */
 }
 
 .tabla-productos th {
-  background-color: #ffc0c0;
+  background-color: #2b2b36; 
+  color: #82b1ff; 
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
-.btn-eliminar {
-  background-color: #ffb3b3;
-  border: none;
-  padding: 6px 12px;
-  cursor: pointer;
+.tabla-productos tr:last-child td { border-bottom: none; }
+.tabla-productos tr:hover { background-color: #2d2d3b; }
+
+/* INPUTS PARA EDITAR */
+.tabla-productos input {
+  background: #1a1a24;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 8px;
   border-radius: 4px;
+  text-align: center;
+}
+
+.tabla-productos input:focus {
+  border-color: #82b1ff;
+  outline: none;
+}
+
+/* BOTONES */
+button {
+  margin: 0 4px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+/* --- CAMBIO DE COLOR DEL BOTÓN ELIMINAR --- */
+.btn-eliminar {
+  /* Rojo ladrillo suave / Pastel */
+  background-color: #a64444; 
+  color: white;
 }
 
 .btn-eliminar:hover {
-  background-color: #ff8f8f;
+  /* Un poco más vivo al pasar el mouse, pero sin quemar la retina */
+  background-color: #c55555; 
+  transform: scale(1.05);
 }
 
-button {
-  margin: 2px;
-  padding: 6px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+/* --- NOTIFICACIÓN FLOTANTE (CENTRADA) --- */
+.notificacion-oval {
+  position: fixed;
+  top: 50%;              /* Centrado Vertical */
+  left: 50%;             /* Centrado Horizontal */
+  transform: translate(-50%, -50%); /* Ajuste exacto al centro */
+  
+  background-color: rgba(30, 30, 40, 0.98); /* Fondo oscuro sólido */
+  color: #82b1ff;        /* Azul Pastel */
+  border: 2px solid #82b1ff; /* Borde un poquito más grueso */
+  
+  padding: 25px 60px;    /* Más grande para que se lea bien en el centro */
+  border-radius: 50px;   
+  
+  font-family: 'Segoe UI', sans-serif;
   font-weight: bold;
+  font-size: 1.2rem;     /* Letra más grande */
+  text-align: center;
+  
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); /* Sombra intensa para destacar */
+  z-index: 9999;
+  
+  /* Animación de "Zoom" con rebote suave */
+  animation: aparecerCentro 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-button:hover {
-  opacity: 0.9;
-}
-
-input {
-  padding: 4px 6px;
-  font-size: 14px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Botones personalizados */
-button:contains("Editar") {
-  background-color: #d9d9ff;
-  color: #333;
-}
-
-button:contains("Guardar"),
-button:contains("💾") {
-  background-color: #b3f0b3;
-  color: #000;
-}
-
-button:contains("Cancelar"),
-button:contains("✖") {
-  background-color: #f0b3b3;
-  color: #000;
+/* Animación: Empieza pequeño y crece */
+@keyframes aparecerCentro {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
