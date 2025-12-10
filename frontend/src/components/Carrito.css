@@ -1,66 +1,131 @@
+/* frontend/src/components/Carrito.css */
+
 .carrito-container {
   text-align: center;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #e0e0e0;
+  max-width: 900px; /* Un poco más ancho para que entre todo bien */
+  margin: 0 auto;
 }
 
 .carrito-container h2 {
-  margin-bottom: 10px;
-}
-
-.carrito-ayuda {
-  font-size: 14px;
-  color: #666;
   margin-bottom: 20px;
+  color: #00d2ff; /* Azul neón */
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.producto-lista {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.carrito-vacio {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 10px;
+  border: 1px dashed #555;
 }
 
-.producto-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 360px;
-  margin: 8px 0;
-  font-size: 18px;
-}
-
-.producto-info {
-  text-align: left;
-  flex: 1;
-}
-
-.producto-botones {
-  display: flex;
-  gap: 6px;
-}
-
-.producto-botones button {
-  padding: 3px 9px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
+/* LISTA DE PRODUCTOS */
 .carrito-lista {
   list-style: none;
   padding: 0;
-  margin-bottom: 16px;
-  font-size: 17px;
+  margin-bottom: 20px;
+}
+
+.carrito-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(30, 30, 40, 0.85); /* Fondo oscuro para que se lea */
+  border: 1px solid #444;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.info-producto {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-producto .nombre {
+  font-weight: bold;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.info-producto .precio {
+  color: #00d2ff;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* CONTROLES */
+.controles-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cantidad {
+  color: #ccc;
+  font-weight: bold;
+}
+
+/* --- ESTILO DEL NUEVO BOTÓN ELIMINAR --- */
+.btn-eliminar {
+  background-color: #ff5252; /* Rojo sólido (Ya no es transparente) */
+  color: white;              /* Texto blanco */
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* Espacio entre ícono y texto */
+  
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.btn-eliminar:hover {
+  background-color: #ff1744;
+  transform: scale(1.05);
+}
+
+/* RESUMEN Y BOTÓN FINAL */
+.resumen-compra {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+}
+
+.resumen-compra h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
 
 .btn-confirmar {
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 12px 30px;
+  font-size: 1rem;
   font-weight: bold;
-  background-color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(45deg, #00d2ff, #007bff);
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-confirmar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(0, 210, 255, 0.6);
 }

@@ -8,12 +8,11 @@ import com.entregaFinal.gestion.repository.PedidoRepository;
 import com.entregaFinal.gestion.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Importante para bases de datos, aunque en Mongo funciona distinto, es buena práctica
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@SuppressWarnings("null")
 public class PedidoService {
 
     @Autowired

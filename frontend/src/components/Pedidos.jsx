@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./Pedidos.css"; // <-- Importamos los estilos nuevos
 
 function Pedidos() {
   const [pedidos, setPedidos] = useState([]);
@@ -7,7 +8,6 @@ function Pedidos() {
     fetch("http://localhost:8080/api/pedidos")
       .then((res) => res.json())
       .then((data) => {
-        console.log("Pedidos recibidos:", data);  // Para debug
         setPedidos(data);
       })
       .catch((err) => {
@@ -17,34 +17,43 @@ function Pedidos() {
   }, []);
 
   return (
-    <div>
+    <div className="pedidos-container">
       <h2>Historial de Pedidos</h2>
       {pedidos.length === 0 ? (
-        <p>No hay pedidos aún.</p>
+        <p style={{textAlign: 'center', color: '#ccc'}}>No hay pedidos aún.</p>
       ) : (
         pedidos.map((pedido) => (
-          <div key={pedido.id} style={{ border: "1px solid #ccc", margin: "20px", padding: "10px" }}>
+          <div key={pedido.id} className="pedido-card">
             <h4>Pedido #{pedido.id}</h4>
-            <p>Fecha: {new Date(pedido.fecha).toLocaleString()}</p>
-            <p>Estado: {pedido.estado}</p>
-            <p>Total: ${pedido.total.toFixed(2)}</p>
+            <p><strong>Fecha:</strong> {new Date(pedido.fecha).toLocaleString()}</p>
+            <p>
+                <strong>Estado:</strong> 
+                <span style={{ 
+                    marginLeft: '8px', 
+                    color: pedido.estado === 'FACTURADO' ? '#4caf50' : '#00d2ff',
+                    fontWeight: 'bold' 
+                }}>
+                    {pedido.estado}
+                </span>
+            </p>
+            <p><strong>Total:</strong> ${pedido.total.toFixed(2)}</p>
 
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table className="tabla-pedidos">
               <thead>
                 <tr>
-                  <th style={{ border: "1px solid black" }}>Producto</th>
-                  <th style={{ border: "1px solid black" }}>Cantidad</th>
-                  <th style={{ border: "1px solid black" }}>Precio Unitario</th>
-                  <th style={{ border: "1px solid black" }}>Subtotal</th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unit.</th>
+                  <th>Subtotal</th>
                 </tr>
               </thead>
               <tbody>
                 {pedido.lineas.map((linea, index) => (
                   <tr key={index}>
-                    <td style={{ border: "1px solid black" }}>{linea.productoNombre}</td>
-                    <td style={{ border: "1px solid black" }}>{linea.cantidad}</td>
-                    <td style={{ border: "1px solid black" }}>${linea.productoPrecio?.toFixed(2)}</td>
-                    <td style={{ border: "1px solid black" }}>${(linea.productoPrecio * linea.cantidad).toFixed(2)}</td>
+                    <td>{linea.productoNombre}</td>
+                    <td>{linea.cantidad}</td>
+                    <td>${linea.productoPrecio?.toFixed(2)}</td>
+                    <td>${(linea.productoPrecio * linea.cantidad).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>

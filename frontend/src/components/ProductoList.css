@@ -108,3 +108,88 @@ button {
     transform: translate(-50%, -50%) scale(1);
   }
 }
+/* =========================================
+   MODAL DE IMAGEN (MEJORADO - GRANDE Y LIMPIO)
+   ========================================= */
+
+/* 1. EL FONDO DE LA PANTALLA (OSCURO) */
+.modal-imagen-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.90); /* Negro casi total, muy elegante */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(8px); /* Blur fuerte al fondo */
+  animation: aparecerSuave 0.2s ease-out;
+}
+
+/* 2. EL CONTENEDOR DE LA IMAGEN (SIN FONDO AZUL) */
+.modal-imagen-contenido {
+  position: relative;
+  /* Quitamos cualquier background-color para que no se vea azul */
+  background: transparent; 
+  box-shadow: none; 
+  border: none;
+  
+  /* Permitimos que crezca */
+  max-width: 95vw; /* 95% del ancho de pantalla */
+  max-height: 95vh; /* 95% del alto de pantalla */
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 3. LA IMAGEN EN SÍ (GIGANTE) */
+.modal-imagen-contenido img {
+  width: auto; 
+  height: auto;
+  
+  /* Esto asegura que la imagen sea lo más grande posible sin salirse de la pantalla */
+  max-width: 90vw;
+  max-height: 90vh;
+  
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); /* Sombra para que "flote" */
+}
+
+/* 4. EL BOTÓN CERRAR (FLOTANTE Y MODERNO) */
+.cerrar-modal {
+  position: absolute;
+  top: -40px;   /* Lo sacamos un poco hacia arriba de la imagen */
+  right: -40px; /* Lo sacamos hacia la derecha */
+  
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1); /* Círculo sutil */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10001;
+}
+
+.cerrar-modal:hover {
+  background-color: #ff5252; /* Rojo al pasar el mouse */
+  color: white;
+  transform: rotate(90deg); /* Pequeña animación al tocar */
+}
+
+/* Animación de entrada */
+@keyframes aparecerSuave {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}

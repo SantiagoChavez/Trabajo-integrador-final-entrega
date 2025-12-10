@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import "./ProductoList.css";
+// 1. IMPORTAMOS EL HOOK DEL CONTEXTO
+import { useNotification } from "../context/NotificationContext";
 
 function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
   const [productos, setProductos] = useState([]);
   
+  // 2. OBTENEMOS LA FUNCIÓN GLOBAL PARA MOSTRAR MENSAJES
+  const { mostrarNotificacion } = useNotification();
+
   // ESTADOS PARA EDICIÓN
   const [productoEditando, setProductoEditando] = useState(null);
   const [datosEditados, setDatosEditados] = useState({});
 
-  // 1. NUEVO ESTADO PARA LA NOTIFICACIÓN
-  const [mensajeAlerta, setMensajeAlerta] = useState(null);
+  // (El estado local de mensajeAlerta LO BORRAMOS, ya no se usa)
+
+  // ESTADOS PARA EL MODAL DE IMAGEN 
+  const [imagenModal, setImagenModal] = useState(null);  
+  const [zoom, setZoom] = useState(1); 
 
   useEffect(() => {
     fetch("http://localhost:8080/api/productos")
@@ -20,12 +28,16 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
       .catch((error) => console.error("Error:", error));
   }, []);
 
-  // Función auxiliar para mostrar el mensaje y borrarlo a los 3 seg
-  const mostrarNotificacion = (texto) => {
-      setMensajeAlerta(texto);
-      setTimeout(() => {
-          setMensajeAlerta(null);
-      }, 3000); // 3 segundos
+  // --- FUNCIONES DEL MODAL DE IMAGEN ---
+  const abrirModal = (url) => {
+      if (url) {
+          setImagenModal(url);
+          setZoom(1); 
+      }
+  };
+
+  const cerrarModal = () => {
+      setImagenModal(null);
   };
 
   // Lógica de filtrado
@@ -35,13 +47,21 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
     return true;
   });
 
+  // --- NUEVA FUNCIÓN PARA AGREGAR AL CARRITO CON NOTIFICACIÓN ---
+  const handleAgregar = (p) => {
+    // 1. Ejecutamos la lógica del carrito (que viene de App.jsx)
+    agregarAlCarrito(p);
+    // 2. Disparamos la notificación global bonita
+    mostrarNotificacion(`✅ ${p.nombre} agregado al carrito`);
+  };
+
   // --- FUNCIONES ADMIN ---
   const handleEliminar = (id) => {
     if(window.confirm("¿Seguro que deseas eliminar este producto?")) {
         fetch(`http://localhost:8080/api/productos/${id}`, {method:"DELETE"})
         .then(() => {
             setProductos(prev => prev.filter(p => p.id !== id));
-            // 2. USAMOS LA NUEVA NOTIFICACIÓN
+            // Usamos la notificación global
             mostrarNotificacion("🗑️ Producto eliminado correctamente");
         })
         .catch(err => mostrarNotificacion("❌ Error al eliminar"));
@@ -76,7 +96,6 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
             p.id === productoEditando ? productoActualizado : p
         ));
         setProductoEditando(null);
-        // 2. USAMOS LA NUEVA NOTIFICACIÓN
         mostrarNotificacion("✅ ¡Cambios guardados con éxito!");
     })
     .catch(err => mostrarNotificacion("❌ Error: " + err.message));
@@ -88,13 +107,34 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
 
   return (
     <div>
-      {/* 3. AQUÍ RENDERIZAMOS LA ALERTA SI EXISTE */}
-      {mensajeAlerta && (
-          <div className="notificacion-oval">
-              {mensajeAlerta}
-          </div>
-      )}
+      {/* YA NO RENDERIZAMOS 'mensajeAlerta' AQUÍ, LO HACE EL CONTEXTO EN APP.JSX */}
 
+      {/* --- MODAL DE IMAGEN CON ZOOM --- */}
+      {imagenModal && (
+        <div className="modal-imagen-backdrop" onClick={cerrarModal}>
+            <div 
+                className="modal-imagen-contenido" 
+                onClick={(e) => e.stopPropagation()} 
+                onWheel={(e) => {
+                    e.stopPropagation(); 
+                    const delta = e.deltaY * -0.001; 
+                    const nuevoZoom = Math.min(Math.max(zoom + delta, 0.5), 5); 
+                    setZoom(nuevoZoom);
+                }}
+            >
+                <span className="cerrar-modal" onClick={cerrarModal}>&times;</span>
+                <img 
+                    src={imagenModal} 
+                    alt="Producto grande" 
+                    style={{ 
+                        transform: `scale(${zoom})`, 
+                        transition: 'transform 0.1s ease-out', 
+                        cursor: 'zoom-in' 
+                    }}
+                />
+            </div>
+        </div>
+      )}
       {!esAdmin && (
           <h2 style={{color:'#fff'}}>
              {busqueda ? `Resultados para: "${busqueda}"` : "Catálogo Completo"}
@@ -119,9 +159,32 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
             {productosVisibles.map((p) => (
               <tr key={p.id}>
                 <td>
-                    {p.imagenUrl ? (
-                        <img src={p.imagenUrl} alt="min" style={{width:'40px', height:'40px', objectFit:'cover', borderRadius:'4px'}}/>
-                    ) : '📷'}
+                    {esAdmin && productoEditando === p.id ? (
+                        <input 
+                            type="text" 
+                            name="imagenUrl" 
+                            value={datosEditados.imagenUrl || ''} 
+                            onChange={handleCambioCampo}
+                            placeholder="/img/..."
+                            style={{width:'80px', fontSize:'0.8rem'}}
+                        />
+                    ) : (
+                        p.imagenUrl ? (
+                            <img 
+                                src={p.imagenUrl} 
+                                alt="min" 
+                                onError={(e) => e.target.src = 'https://via.placeholder.com/40?text=X'}
+                                onClick={() => abrirModal(p.imagenUrl)} 
+                                style={{
+                                    width:'40px', 
+                                    height:'40px', 
+                                    objectFit:'cover', 
+                                    borderRadius:'4px',
+                                    cursor: 'pointer' 
+                                }}
+                            />
+                        ) : '📷'
+                    )}
                 </td>
                 <td>
                   {esAdmin && productoEditando === p.id ? 
@@ -163,7 +226,7 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
                     </>
                   ) : (
                     <button
-                      onClick={() => agregarAlCarrito(p)}
+                      onClick={() => handleAgregar(p)} // <--- AQUÍ LLAMAMOS A LA NUEVA FUNCIÓN
                       disabled={p.stock === 0}
                       style={{ 
                         backgroundColor: p.stock === 0 ? "#444" : "#007bff", 

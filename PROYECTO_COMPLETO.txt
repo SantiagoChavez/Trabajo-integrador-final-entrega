@@ -508,12 +508,11 @@ import com.entregaFinal.gestion.repository.PedidoRepository;
 import com.entregaFinal.gestion.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Importante para bases de datos, aunque en Mongo funciona distinto, es buena práctica
-
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@SuppressWarnings("null")
 public class PedidoService {
 
     @Autowired
@@ -695,6 +694,9 @@ ARCHIVO: .\frontend\src\App.jsx
 ==================================================
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+// 1. IMPORTAMOS EL PROVEEDOR DE NOTIFICACIONES
+import { NotificationProvider } from './context/NotificationContext';
+
 import Navbar from './components/Navbar';
 import ProductoList from './components/ProductoList';
 import AgregarProducto from './components/AgregarProducto';
@@ -704,7 +706,7 @@ import Inicio from './components/Inicio';
 import Categorias from './components/Categorias';
 import Login from './components/Login';
 import AdminPedidos from './components/AdminPedidos'; 
-import './components/Admin.css'; // <--- IMPORTANTE: Importamos los estilos nuevos
+import './components/Admin.css'; 
 
 const RutaPrivadaAdmin = ({ usuario, children }) => {
   if (!usuario) return <Navigate to="/login" />;
@@ -714,11 +716,26 @@ const RutaPrivadaAdmin = ({ usuario, children }) => {
 
 function App() {
   const [carrito, setCarrito] = useState([]);
-  const [usuario, setUsuario] = useState(null);
   const [busqueda, setBusqueda] = useState(""); 
 
-  const handleLogin = (userData) => setUsuario(userData);
-  const handleLogout = () => { setUsuario(null); setCarrito([]); };
+  // 2. CORRECCIÓN DE PERSISTENCIA: Leemos de localStorage al iniciar
+  const [usuario, setUsuario] = useState(() => {
+    const usuarioGuardado = localStorage.getItem("usuario");
+    return usuarioGuardado ? JSON.parse(usuarioGuardado) : null;
+  });
+
+  // Guardamos en localStorage al loguear
+  const handleLogin = (userData) => {
+    setUsuario(userData);
+    localStorage.setItem("usuario", JSON.stringify(userData));
+  };
+
+  // Borramos de localStorage al salir
+  const handleLogout = () => { 
+    setUsuario(null); 
+    setCarrito([]); 
+    localStorage.removeItem("usuario");
+  };
 
   const agregarAlCarrito = (producto) => {
     if (producto.stock === 0) { alert("Sin stock"); return; }
@@ -733,7 +750,10 @@ function App() {
     } else {
       setCarrito([...carrito, { ...producto, cantidad: 1 }]);
     }
-    alert(`✅ ${producto.nombre} agregado!`);
+    
+    // 3. QUITAMOS EL ALERT DE AQUÍ
+    // Ya no hacemos alert("✅ Agregado") para que no salga la ventana gris.
+    // El mensaje bonito lo mostrará ProductoList.jsx usando el contexto.
   };
 
   const restarDelCarrito = (id) => {
@@ -746,79 +766,120 @@ function App() {
   const vaciarCarrito = () => setCarrito([]);
 
   return (
-    <Router>
-      <Navbar 
-        usuario={usuario} 
-        onLogout={handleLogout} 
-        carrito={carrito} 
-        busqueda={busqueda} 
-        setBusqueda={setBusqueda} 
-      />
-      
-      <main>
-        <Routes>
-          <Route path="/" element={<Inicio usuario={usuario} />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          
-          <Route path="/productos" element={
-             <div style={{ padding: '20px', textAlign: 'center' }}>
-               <ProductoList agregarAlCarrito={agregarAlCarrito} esAdmin={false} busqueda={busqueda} />
-             </div>
-          } />
+    // 4. ENVOLVEMOS TODO CON EL PROVEEDOR DE NOTIFICACIONES
+    <NotificationProvider>
+      <Router>
+        <Navbar 
+          usuario={usuario} 
+          onLogout={handleLogout} 
+          carrito={carrito} 
+          busqueda={busqueda} 
+          setBusqueda={setBusqueda} 
+        />
+        
+        <main>
+          <Routes>
+            <Route path="/" element={<Inicio usuario={usuario} />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            
+            <Route path="/productos" element={
+               <div style={{ padding: '20px', textAlign: 'center' }}>
+                 <ProductoList agregarAlCarrito={agregarAlCarrito} esAdmin={false} busqueda={busqueda} />
+               </div>
+            } />
 
-          <Route path="/carrito" element={
-             <div style={{ padding: '20px', textAlign: 'center' }}>
-               <Carrito carrito={carrito} restarDelCarrito={restarDelCarrito} vaciarCarrito={vaciarCarrito} />
-             </div>
-          } />
+            <Route path="/carrito" element={
+               <div style={{ padding: '20px', textAlign: 'center' }}>
+                 <Carrito 
+                    carrito={carrito} 
+                    restarDelCarrito={restarDelCarrito} 
+                    vaciarCarrito={vaciarCarrito} 
+                    usuario={usuario} 
+                 />
+               </div>
+            } />
 
-          <Route path="/pedidos" element={<div style={{ padding: '20px' }}><Pedidos /></div>} />
-          <Route path="/categorias" element={<Categorias />} />
+            <Route path="/pedidos" element={<div style={{ padding: '20px' }}><Pedidos /></div>} />
+            <Route path="/categorias" element={<Categorias />} />
 
-          {/* --- ZONA ADMIN (RENOVADA) --- */}
-          <Route path="/gestion" element={
-            <RutaPrivadaAdmin usuario={usuario}>
-              <div className="admin-container">
-                
-                <h1 className="admin-title">⚙️ Panel de Operaciones</h1>
-                
-                {/* 1. Tarjeta de Alta */}
-                <div className="admin-card">
-                   <h3 className="section-title">➕ Dar de Alta Nuevo Producto</h3>
-                   <AgregarProducto />
+            {/* --- ZONA ADMIN --- */}
+            <Route path="/gestion" element={
+              <RutaPrivadaAdmin usuario={usuario}>
+                <div className="admin-container">
+                  
+                  <h1 className="admin-title">⚙️ Panel de Operaciones</h1>
+                  
+                  {/* 1. Tarjeta de Alta */}
+                  <div className="admin-card">
+                     <h3 className="section-title">➕ Dar de Alta Nuevo Producto</h3>
+                     <AgregarProducto />
+                  </div>
+                  
+                  {/* 2. Tarjeta de Listado */}
+                  <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                      <h3 className="section-title" style={{textAlign:'center', display:'block'}}>📝 Gestión de Stock</h3>
+                      <ProductoList esAdmin={true} busqueda={busqueda} />
+                  </div>
+
+                  <hr style={{ margin: '60px auto', width: '80%', borderColor: '#333' }} />
+                  
+                  {/* 3. Pedidos y Facturación */}
+                  <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                    <AdminPedidos />
+                  </div>
+                  
                 </div>
-                
-                {/* 2. Tarjeta de Listado */}
-                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-                    <h3 className="section-title" style={{textAlign:'center', display:'block'}}>📝 Gestión de Stock</h3>
-                    {/* Le pasamos busqueda vacía o la global, según prefieras. Aquí usa la global */}
-                    <ProductoList esAdmin={true} busqueda={busqueda} />
-                </div>
+              </RutaPrivadaAdmin>
+            } />
 
-                <hr style={{ margin: '60px auto', width: '80%', borderColor: '#333' }} />
-                
-                {/* 3. Pedidos y Facturación */}
-                <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-                  <AdminPedidos />
-                </div>
-                
-              </div>
-            </RutaPrivadaAdmin>
-          } />
-
-        </Routes>
-      </main>
-    </Router>
+          </Routes>
+        </main>
+      </Router>
+    </NotificationProvider>
   );
 }
 
 export default App;
+==================================================
+ARCHIVO: .\frontend\src\index.css
+==================================================
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  
+  /* FONDO TECNOLÓGICO */
+  background-image: url('/tech-bg.jpg'); /* Asegurate que la imagen esté en la carpeta public */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; 
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+/* Capa oscura para legibilidad */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  
+  /* 1. CAMBIO AQUÍ: Bajé la opacidad de 0.85 a 0.70 para que se vea más la imagen */
+  background: rgba(15, 15, 20, 0.70);
+  
+  /* 2. CAMBIO AQUÍ: Bajé el desenfoque de 4px a 1px (Casi nítido, solo suaviza un poco) */
+  /* Si lo quieres TOTALMENTE nítido, cambia 1px por 0px */
+  backdrop-filter: blur(1px);         
+  
+  z-index: -1;
+}
 ==================================================
 ARCHIVO: .\frontend\src\main.jsx
 ==================================================
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
+import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
@@ -919,6 +980,108 @@ ARCHIVO: .\frontend\src\components\Admin.css
 .btn-admin-submit:hover {
   background-color: #5c6bc0; /* Un poco más claro al pasar el mouse */
 }
+
+/* --- NOTIFICACIÓN FLOTANTE (REUTILIZABLE) --- */
+.notificacion-oval {
+  position: fixed;
+  top: 50%;              /* Centrado Vertical */
+  left: 50%;             /* Centrado Horizontal */
+  transform: translate(-50%, -50%);
+  
+  background-color: rgba(30, 30, 40, 0.95); /* Fondo oscuro semitransparente */
+  color: #00d2ff;        /* Texto Cyan Neón */
+  border: 1px solid #00d2ff;
+  
+  padding: 20px 40px;
+  border-radius: 50px;   
+  
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: center;
+  
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); /* Resplandor suave */
+  z-index: 9999;
+  
+  animation: aparecerCentro 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes aparecerCentro {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* --- MODAL DE CONFIRMACIÓN (ESTILO GAMER) --- */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85); /* Fondo muy oscuro para bloquear */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; /* Por encima de todo */
+  backdrop-filter: blur(4px); /* Efecto borroso pro */
+}
+
+.modal-neon {
+  background-color: #1a1a24;
+  border: 1px solid #ff5252; /* Borde Rojo para acciones peligrosas */
+  box-shadow: 0 0 20px rgba(255, 82, 82, 0.2);
+  padding: 30px;
+  border-radius: 12px;
+  width: 400px;
+  text-align: center;
+  animation: aparecerSuave 0.2s ease-out;
+}
+
+.modal-neon h3 {
+  color: #ff5252;
+  margin-top: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.modal-neon p {
+  color: #ccc;
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+.modal-botones {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-cancelar {
+  background: transparent;
+  border: 1px solid #555;
+  color: #ccc;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-confirmar-rojo {
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid #ff5252;
+  color: #ff5252;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.btn-confirmar-rojo:hover {
+  background: #ff5252;
+  color: white;
+  box-shadow: 0 0 15px rgba(255, 82, 82, 0.5);
+}
 ==================================================
 ARCHIVO: .\frontend\src\components\AdminPedidos.jsx
 ==================================================
@@ -927,6 +1090,10 @@ import { generarFacturaPDF } from '../utils/facturaPDF';
 
 function AdminPedidos() {
   const [pedidos, setPedidos] = useState([]);
+  const [mensajeAlerta, setMensajeAlerta] = useState(null);
+  
+  // NUEVO ESTADO: Guarda qué pedido estamos a punto de anular para mostrar el modal
+  const [pedidoAAnular, setPedidoAAnular] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/pedidos")
@@ -935,28 +1102,29 @@ function AdminPedidos() {
       .catch((err) => console.error(err));
   }, []);
 
+  const mostrarNotificacion = (texto) => {
+      setMensajeAlerta(texto);
+      setTimeout(() => setMensajeAlerta(null), 3000);
+  };
+
   const handleFacturar = (pedido) => {
-    // 1. Generamos el PDF visualmente
     try {
         generarFacturaPDF(pedido);
     } catch (error) {
-        alert("Error al crear el PDF.");
-        return; // Si falla el PDF, no cambiamos el estado
+        mostrarNotificacion("❌ Error al crear el PDF.");
+        return;
     }
 
-    // 2. Si ya estaba facturado, solo bajamos el PDF y no hacemos nada más en la BD
     if (pedido.estado === "FACTURADO") return;
 
-    // 3. Avisamos al Backend que cambie el estado a "FACTURADO"
     fetch(`http://localhost:8080/api/pedidos/${pedido.id}/estado?nuevoEstado=FACTURADO`, {
         method: "PUT"
     })
     .then(res => {
-        if (!res.ok) throw new Error("Error al actualizar estado");
+        if (!res.ok) throw new Error("Error");
         return res.json();
     })
-    .then(pedidoActualizado => {
-        // 4. Actualizamos la lista local para ver el cambio instantáneo (verde)
+    .then(() => {
         setPedidos(prev => prev.map(p => 
             p.id === pedido.id ? { ...p, estado: "FACTURADO" } : p
         ));
@@ -964,15 +1132,42 @@ function AdminPedidos() {
     .catch(err => console.error(err));
   };
 
+  // 1. PRIMER PASO: El usuario toca "Anular" y abrimos el modal (NO hacemos fetch todavía)
+  const abrirModalAnular = (pedido) => {
+      setPedidoAAnular(pedido);
+  };
+
+  // 2. SEGUNDO PASO: El usuario confirmó en el modal, ahora sí ejecutamos
+  const confirmarAnulacion = () => {
+      if (!pedidoAAnular) return;
+
+      fetch(`http://localhost:8080/api/pedidos/${pedidoAAnular.id}/estado?nuevoEstado=PENDIENTE`, {
+          method: "PUT"
+      })
+      .then(res => {
+          if (!res.ok) throw new Error("Error");
+          return res.json();
+      })
+      .then(() => {
+          setPedidos(prev => prev.map(p => 
+              p.id === pedidoAAnular.id ? { ...p, estado: "PENDIENTE" } : p
+          ));
+          mostrarNotificacion("✅ Factura anulada. Listo para corregir.");
+          setPedidoAAnular(null); // Cerramos el modal
+      })
+      .catch(() => {
+          mostrarNotificacion("❌ Error al conectar con el servidor.");
+          setPedidoAAnular(null);
+      });
+  };
+
   const handleDespachar = (pedido) => {
     if (pedido.estado !== "FACTURADO") {
-        alert("⚠️ Primero debes facturar el pedido antes de despacharlo.");
+        mostrarNotificacion("⚠️ Debes facturar antes de despachar.");
         return;
     }
     const tracking = "TRK-" + Math.floor(Math.random() * 99999);
-    alert(`🚚 Pedido despachado. Tracking: ${tracking}`);
-    
-    // Opcional: También podrías guardar el estado "ENVIADO" en el backend aquí
+    mostrarNotificacion(`🚚 Pedido despachado. Tracking: ${tracking}`);
   };
 
   return (
@@ -986,13 +1181,40 @@ function AdminPedidos() {
         boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
     }}>
       
+      {/* --- NOTIFICACIÓN FLOTANTE --- */}
+      {mensajeAlerta && (
+          <div className="notificacion-oval">
+              {mensajeAlerta}
+          </div>
+      )}
+
+      {/* --- MODAL DE CONFIRMACIÓN PROPIO (Solo se muestra si pedidoAAnular tiene datos) --- */}
+      {pedidoAAnular && (
+          <div className="modal-backdrop">
+              <div className="modal-neon">
+                  <h3>⚠️ Confirmar Anulación</h3>
+                  <p>
+                      ¿Estás seguro de anular la factura del pedido 
+                      <strong style={{color: 'white'}}> {pedidoAAnular.id.substring(0,8)}</strong>?
+                      <br/><br/>
+                      <span style={{fontSize:'0.9rem', opacity:0.8}}>El estado volverá a "PENDIENTE" para que puedas editar y refacturar.</span>
+                  </p>
+                  <div className="modal-botones">
+                      <button className="btn-cancelar" onClick={() => setPedidoAAnular(null)}>
+                          Cancelar
+                      </button>
+                      <button className="btn-confirmar-rojo" onClick={confirmarAnulacion}>
+                          Sí, Anular
+                      </button>
+                  </div>
+              </div>
+          </div>
+      )}
+
       <h3 style={{ 
-          color: '#a0a0b0', 
-          borderBottom: '1px solid #2d2d44', 
-          paddingBottom: '10px',
-          textAlign: 'center',
-          textTransform: 'uppercase',
-          letterSpacing: '2px'
+          color: '#a0a0b0', borderBottom: '1px solid #2d2d44', 
+          paddingBottom: '10px', textAlign: 'center', 
+          textTransform: 'uppercase', letterSpacing: '2px'
       }}>
         ⚙️ Control de Pedidos
       </h3>
@@ -1012,24 +1234,15 @@ function AdminPedidos() {
           </thead>
           <tbody>
             {pedidos.map((p) => {
-              // Lógica visual según estado
               const esFacturado = p.estado === "FACTURADO";
-              
               return (
               <tr key={p.id} style={{ borderBottom: '1px solid #2d2d44' }}>
-                
                 <td style={{ padding: '10px', color: '#888', fontFamily: 'monospace' }}>
                     {p.id.substring(0, 8)}...
                 </td>
-                
-                {/* ESTADO CON COLORES DINÁMICOS */}
                 <td style={{ padding: '10px', textAlign: 'center' }}>
                     <span style={{ 
-                        padding: '4px 10px', 
-                        borderRadius: '4px', 
-                        fontSize: '0.75rem',
-                        fontWeight: 'bold',
-                        // Cambio de color: Azul si es Pendiente, Verde si es Facturado
+                        padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold',
                         border: esFacturado ? '1px solid #4caf50' : '1px solid #00d2ff',
                         color: esFacturado ? '#4caf50' : '#00d2ff',
                         background: esFacturado ? 'rgba(76, 175, 80, 0.1)' : 'rgba(0, 210, 255, 0.1)'
@@ -1037,51 +1250,68 @@ function AdminPedidos() {
                         {p.estado || "PENDIENTE"}
                     </span>
                 </td>
-                
                 <td style={{ padding: '10px', textAlign: 'center', color: '#ccc' }}>
                     {p.lineas ? p.lineas.length : 0}
                 </td>
-                
-                {/* BOTÓN FACTURAR */}
                 <td style={{ padding: '10px', textAlign: 'center' }}>
-                  <button 
-                    onClick={() => handleFacturar(p)}
-                    style={{ 
-                        background: esFacturado ? '#4caf50' : 'transparent', 
-                        color: esFacturado ? 'white' : '#4caf50', 
-                        border: '1px solid #4caf50', 
-                        padding: '6px 12px', 
-                        cursor: 'pointer', 
-                        borderRadius:'4px',
-                        fontSize: '0.8rem',
-                        transition: 'all 0.2s',
-                        fontWeight: 'bold'
-                    }}
-                  >
-                    {esFacturado ? "⬇ Descargar Copia" : "📄 FACTURAR"}
-                  </button>
-                </td>
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}>
+                      <button 
+                        onClick={() => handleFacturar(p)}
+                        style={{ 
+                            background: esFacturado ? 'rgba(76, 175, 80, 0.15)' : 'transparent', 
+                            color: '#69f0ae',
+                            border: esFacturado ? '1px solid rgba(76, 175, 80, 0.3)' : '1px solid #69f0ae',
+                            padding: '6px 12px', cursor: 'pointer', borderRadius: '6px',
+                            fontSize: '0.75rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '5px',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                      >
+                        {esFacturado ? ( <><span>⬇</span> PDF</> ) : ( <><span>📄</span> FACTURAR</> )}
+                      </button>
 
-                {/* BOTÓN LOGÍSTICA */}
+                      {esFacturado && (
+                          <button
+                            onClick={() => abrirModalAnular(p)} 
+                            title="Anular factura y corregir"
+                            style={{
+                                background: 'transparent',
+                                border: '1px solid rgba(255, 82, 82, 0.4)',
+                                color: '#ff5252',
+                                padding: '6px 10px', borderRadius: '6px', cursor: 'pointer',
+                                fontSize: '0.75rem', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '4px',
+                                transition: 'all 0.2s ease'
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.background = 'rgba(255, 82, 82, 0.1)';
+                                e.currentTarget.style.borderColor = '#ff5252';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.background = 'transparent';
+                                e.currentTarget.style.borderColor = 'rgba(255, 82, 82, 0.4)';
+                            }}
+                          >
+                              ❌ <span style={{fontSize: '0.7rem', opacity: 0.9}}>ANULAR</span>
+                          </button>
+                      )}
+                  </div>
+                </td>
                 <td style={{ padding: '10px', textAlign: 'center' }}>
                   <button 
                     onClick={() => handleDespachar(p)}
-                    disabled={!esFacturado} // Deshabilitado si no está facturado
+                    disabled={!esFacturado}
                     style={{ 
                         background: 'transparent', 
                         color: esFacturado ? '#ff9800' : '#555', 
                         border: esFacturado ? '1px solid #ff9800' : '1px solid #555', 
-                        padding: '6px 12px', 
-                        cursor: esFacturado ? 'pointer' : 'not-allowed', 
-                        borderRadius:'4px',
-                        fontSize: '0.8rem',
-                        transition: 'all 0.2s'
+                        padding: '6px 12px', cursor: esFacturado ? 'pointer' : 'not-allowed', 
+                        borderRadius:'4px', fontSize: '0.8rem', transition: 'all 0.2s'
                     }}
                   >
                     🚚 Despachar
                   </button>
                 </td>
-
               </tr>
             )})}
           </tbody>
@@ -1163,94 +1393,172 @@ export default AgregarProducto;
 ==================================================
 ARCHIVO: .\frontend\src\components\Carrito.css
 ==================================================
+/* frontend/src/components/Carrito.css */
+
 .carrito-container {
   text-align: center;
   padding: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #e0e0e0; /* Texto claro */
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .carrito-container h2 {
-  margin-bottom: 10px;
-}
-
-.carrito-ayuda {
-  font-size: 14px;
-  color: #666;
   margin-bottom: 20px;
+  color: #00d2ff; /* Título Neón */
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.producto-lista {
-  list-style: none;
-  padding: 0;
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.carrito-vacio {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  border-radius: 10px;
+  border: 1px dashed #555;
 }
 
-.producto-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 360px;
-  margin: 8px 0;
-  font-size: 18px;
-}
-
-.producto-info {
-  text-align: left;
-  flex: 1;
-}
-
-.producto-botones {
-  display: flex;
-  gap: 6px;
-}
-
-.producto-botones button {
-  padding: 3px 9px;
-  font-size: 14px;
-  cursor: pointer;
-}
-
+/* LISTA DE PRODUCTOS */
 .carrito-lista {
   list-style: none;
   padding: 0;
-  margin-bottom: 16px;
-  font-size: 17px;
+  margin-bottom: 20px;
+}
+
+.carrito-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  /* Fondo semitransparente para que se lea sobre la imagen */
+  background-color: rgba(30, 30, 40, 0.8); 
+  border: 1px solid #444;
+  
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.info-producto {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-producto .nombre {
+  font-weight: bold;
+  color: #fff;
+  font-size: 1.1rem;
+}
+
+.info-producto .precio {
+  color: #00d2ff; /* Precio en cyan */
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* CONTROLES */
+.controles-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cantidad {
+  color: #ccc;
+  font-weight: bold;
+}
+
+.btn-eliminar {
+  background-color: #ff5252; /* Rojo suave */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: background 0.2s;
+}
+
+.btn-eliminar:hover {
+  background-color: #ff1744;
+}
+
+/* RESUMEN Y BOTÓN FINAL */
+.resumen-compra {
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+}
+
+.resumen-compra h3 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
 
 .btn-confirmar {
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 12px 30px;
+  font-size: 1rem;
   font-weight: bold;
-  background-color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  
+  background: linear-gradient(45deg, #00d2ff, #007bff);
+  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-confirmar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(0, 210, 255, 0.6);
 }
 ==================================================
 ARCHIVO: .\frontend\src\components\Carrito.jsx
 ==================================================
 import React from "react";
 import "./Carrito.css";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
+// Importamos el contexto
+import { useNotification } from "../context/NotificationContext";
 
-// 1. AHORA RECIBIMOS LOS DATOS DESDE APP.JSX (PROPS)
-function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
+function Carrito({ carrito, restarDelCarrito, vaciarCarrito, usuario }) {
   
   const navigate = useNavigate();
+  // Usamos la función global
+  const { mostrarNotificacion } = useNotification();
 
-  // Calcular el precio total
   const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
 
   const crearPedido = () => {
+    // Validación: Usuario
+    if (!usuario) {
+        mostrarNotificacion("🔒 Inicia sesión para finalizar la compra");
+        setTimeout(() => {
+            navigate("/login");
+        }, 2000);
+        return;
+    }
+
+    // Validación: Carrito vacío
     if (carrito.length === 0) {
-        alert("El carrito está vacío");
+        mostrarNotificacion("⚠️ El carrito está vacío");
         return;
     }
 
     const pedido = {
+      usuarioId: usuario.username, 
       estado: "nuevo",
       lineas: carrito.map((item) => ({
         productoId: item.id,
@@ -1268,15 +1576,15 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
         return res.json();
       })
       .then(() => {
-        alert("✅ ¡Pedido creado con éxito!");
-        // Usamos la función que nos prestó App.jsx para limpiar
+        mostrarNotificacion("✅ ¡Pedido creado con éxito!");
         vaciarCarrito(); 
-        // Opcional: redirigir al inicio o a historial
-        navigate("/pedidos");
+        setTimeout(() => {
+            navigate("/pedidos");
+        }, 2000);
       })
       .catch((err) => {
         console.error("Error al crear pedido", err);
-        alert("❌ Error al crear el pedido");
+        mostrarNotificacion("❌ Error al procesar el pedido");
       });
   };
 
@@ -1287,7 +1595,9 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
       {carrito.length === 0 ? (
         <div className="carrito-vacio">
             <p>No hay productos en el carrito.</p>
-            <button onClick={() => navigate("/productos")}>Ir al Catálogo</button>
+            <button className="btn-confirmar" style={{background: '#444', marginTop:'10px'}} onClick={() => navigate("/productos")}>
+                Ir al Catálogo
+            </button>
         </div>
       ) : (
         <div>
@@ -1301,12 +1611,34 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
                 
                 <div className="controles-cantidad">
                     <span className="cantidad">Cant: {item.cantidad}</span>
-                    {/* Usamos la función que viene de App.jsx */}
+                    
                     <button 
                         className="btn-eliminar" 
                         onClick={() => restarDelCarrito(item.id)}
+                        title="Eliminar del carrito"
+                        style={{
+                            background: 'transparent',
+                            border: '1px solid #ff5252',
+                            color: '#ff5252',
+                            width: '35px',
+                            height: '35px',
+                            borderRadius: '6px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.2s'
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.background = 'rgba(255, 82, 82, 0.2)';
+                            e.currentTarget.style.transform = 'scale(1.1)';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.background = 'transparent';
+                            e.currentTarget.style.transform = 'scale(1)';
+                        }}
                     >
-                        ➖
+                         <FaTrash size={16} />
                     </button>
                 </div>
               </li>
@@ -1325,6 +1657,7 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
   );
 }
 
+// ESTA ES LA LÍNEA QUE FALTABA Y CAUSABA EL ERROR:
 export default Carrito;
 ==================================================
 ARCHIVO: .\frontend\src\components\Categorias.css
@@ -2171,21 +2504,114 @@ button {
     transform: translate(-50%, -50%) scale(1);
   }
 }
+/* =========================================
+   MODAL DE IMAGEN (MEJORADO - GRANDE Y LIMPIO)
+   ========================================= */
+
+/* 1. EL FONDO DE LA PANTALLA (OSCURO) */
+.modal-imagen-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.90); /* Negro casi total, muy elegante */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  backdrop-filter: blur(8px); /* Blur fuerte al fondo */
+  animation: aparecerSuave 0.2s ease-out;
+}
+
+/* 2. EL CONTENEDOR DE LA IMAGEN (SIN FONDO AZUL) */
+.modal-imagen-contenido {
+  position: relative;
+  /* Quitamos cualquier background-color para que no se vea azul */
+  background: transparent; 
+  box-shadow: none; 
+  border: none;
+  
+  /* Permitimos que crezca */
+  max-width: 95vw; /* 95% del ancho de pantalla */
+  max-height: 95vh; /* 95% del alto de pantalla */
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 3. LA IMAGEN EN SÍ (GIGANTE) */
+.modal-imagen-contenido img {
+  width: auto; 
+  height: auto;
+  
+  /* Esto asegura que la imagen sea lo más grande posible sin salirse de la pantalla */
+  max-width: 90vw;
+  max-height: 90vh;
+  
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); /* Sombra para que "flote" */
+}
+
+/* 4. EL BOTÓN CERRAR (FLOTANTE Y MODERNO) */
+.cerrar-modal {
+  position: absolute;
+  top: -40px;   /* Lo sacamos un poco hacia arriba de la imagen */
+  right: -40px; /* Lo sacamos hacia la derecha */
+  
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1); /* Círculo sutil */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10001;
+}
+
+.cerrar-modal:hover {
+  background-color: #ff5252; /* Rojo al pasar el mouse */
+  color: white;
+  transform: rotate(90deg); /* Pequeña animación al tocar */
+}
+
+/* Animación de entrada */
+@keyframes aparecerSuave {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
 ==================================================
 ARCHIVO: .\frontend\src\components\ProductoList.jsx
 ==================================================
 import React, { useEffect, useState } from "react";
 import "./ProductoList.css";
+// 1. IMPORTAMOS EL HOOK DEL CONTEXTO
+import { useNotification } from "../context/NotificationContext";
 
 function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
   const [productos, setProductos] = useState([]);
   
+  // 2. OBTENEMOS LA FUNCIÓN GLOBAL PARA MOSTRAR MENSAJES
+  const { mostrarNotificacion } = useNotification();
+
   // ESTADOS PARA EDICIÓN
   const [productoEditando, setProductoEditando] = useState(null);
   const [datosEditados, setDatosEditados] = useState({});
 
-  // 1. NUEVO ESTADO PARA LA NOTIFICACIÓN
-  const [mensajeAlerta, setMensajeAlerta] = useState(null);
+  // (El estado local de mensajeAlerta LO BORRAMOS, ya no se usa)
+
+  // ESTADOS PARA EL MODAL DE IMAGEN 
+  const [imagenModal, setImagenModal] = useState(null);  
+  const [zoom, setZoom] = useState(1); 
 
   useEffect(() => {
     fetch("http://localhost:8080/api/productos")
@@ -2196,12 +2622,16 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
       .catch((error) => console.error("Error:", error));
   }, []);
 
-  // Función auxiliar para mostrar el mensaje y borrarlo a los 3 seg
-  const mostrarNotificacion = (texto) => {
-      setMensajeAlerta(texto);
-      setTimeout(() => {
-          setMensajeAlerta(null);
-      }, 3000); // 3 segundos
+  // --- FUNCIONES DEL MODAL DE IMAGEN ---
+  const abrirModal = (url) => {
+      if (url) {
+          setImagenModal(url);
+          setZoom(1); 
+      }
+  };
+
+  const cerrarModal = () => {
+      setImagenModal(null);
   };
 
   // Lógica de filtrado
@@ -2211,13 +2641,21 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
     return true;
   });
 
+  // --- NUEVA FUNCIÓN PARA AGREGAR AL CARRITO CON NOTIFICACIÓN ---
+  const handleAgregar = (p) => {
+    // 1. Ejecutamos la lógica del carrito (que viene de App.jsx)
+    agregarAlCarrito(p);
+    // 2. Disparamos la notificación global bonita
+    mostrarNotificacion(`✅ ${p.nombre} agregado al carrito`);
+  };
+
   // --- FUNCIONES ADMIN ---
   const handleEliminar = (id) => {
     if(window.confirm("¿Seguro que deseas eliminar este producto?")) {
         fetch(`http://localhost:8080/api/productos/${id}`, {method:"DELETE"})
         .then(() => {
             setProductos(prev => prev.filter(p => p.id !== id));
-            // 2. USAMOS LA NUEVA NOTIFICACIÓN
+            // Usamos la notificación global
             mostrarNotificacion("🗑️ Producto eliminado correctamente");
         })
         .catch(err => mostrarNotificacion("❌ Error al eliminar"));
@@ -2252,7 +2690,6 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
             p.id === productoEditando ? productoActualizado : p
         ));
         setProductoEditando(null);
-        // 2. USAMOS LA NUEVA NOTIFICACIÓN
         mostrarNotificacion("✅ ¡Cambios guardados con éxito!");
     })
     .catch(err => mostrarNotificacion("❌ Error: " + err.message));
@@ -2264,13 +2701,34 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
 
   return (
     <div>
-      {/* 3. AQUÍ RENDERIZAMOS LA ALERTA SI EXISTE */}
-      {mensajeAlerta && (
-          <div className="notificacion-oval">
-              {mensajeAlerta}
-          </div>
-      )}
+      {/* YA NO RENDERIZAMOS 'mensajeAlerta' AQUÍ, LO HACE EL CONTEXTO EN APP.JSX */}
 
+      {/* --- MODAL DE IMAGEN CON ZOOM --- */}
+      {imagenModal && (
+        <div className="modal-imagen-backdrop" onClick={cerrarModal}>
+            <div 
+                className="modal-imagen-contenido" 
+                onClick={(e) => e.stopPropagation()} 
+                onWheel={(e) => {
+                    e.stopPropagation(); 
+                    const delta = e.deltaY * -0.001; 
+                    const nuevoZoom = Math.min(Math.max(zoom + delta, 0.5), 5); 
+                    setZoom(nuevoZoom);
+                }}
+            >
+                <span className="cerrar-modal" onClick={cerrarModal}>&times;</span>
+                <img 
+                    src={imagenModal} 
+                    alt="Producto grande" 
+                    style={{ 
+                        transform: `scale(${zoom})`, 
+                        transition: 'transform 0.1s ease-out', 
+                        cursor: 'zoom-in' 
+                    }}
+                />
+            </div>
+        </div>
+      )}
       {!esAdmin && (
           <h2 style={{color:'#fff'}}>
              {busqueda ? `Resultados para: "${busqueda}"` : "Catálogo Completo"}
@@ -2295,9 +2753,32 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
             {productosVisibles.map((p) => (
               <tr key={p.id}>
                 <td>
-                    {p.imagenUrl ? (
-                        <img src={p.imagenUrl} alt="min" style={{width:'40px', height:'40px', objectFit:'cover', borderRadius:'4px'}}/>
-                    ) : '📷'}
+                    {esAdmin && productoEditando === p.id ? (
+                        <input 
+                            type="text" 
+                            name="imagenUrl" 
+                            value={datosEditados.imagenUrl || ''} 
+                            onChange={handleCambioCampo}
+                            placeholder="/img/..."
+                            style={{width:'80px', fontSize:'0.8rem'}}
+                        />
+                    ) : (
+                        p.imagenUrl ? (
+                            <img 
+                                src={p.imagenUrl} 
+                                alt="min" 
+                                onError={(e) => e.target.src = 'https://via.placeholder.com/40?text=X'}
+                                onClick={() => abrirModal(p.imagenUrl)} 
+                                style={{
+                                    width:'40px', 
+                                    height:'40px', 
+                                    objectFit:'cover', 
+                                    borderRadius:'4px',
+                                    cursor: 'pointer' 
+                                }}
+                            />
+                        ) : '📷'
+                    )}
                 </td>
                 <td>
                   {esAdmin && productoEditando === p.id ? 
@@ -2339,7 +2820,7 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
                     </>
                   ) : (
                     <button
-                      onClick={() => agregarAlCarrito(p)}
+                      onClick={() => handleAgregar(p)} // <--- AQUÍ LLAMAMOS A LA NUEVA FUNCIÓN
                       disabled={p.stock === 0}
                       style={{ 
                         backgroundColor: p.stock === 0 ? "#444" : "#007bff", 
@@ -2364,6 +2845,38 @@ function ProductoList({ agregarAlCarrito, esAdmin, busqueda }) {
 
 export default ProductoList;
 ==================================================
+ARCHIVO: .\frontend\src\context\NotificationContext.jsx
+==================================================
+import React, { createContext, useState, useContext } from 'react';
+import '../components/Admin.css'; // Importamos el CSS donde está .notificacion-oval
+
+const NotificationContext = createContext();
+
+export const NotificationProvider = ({ children }) => {
+  const [mensaje, setMensaje] = useState(null);
+
+  const mostrarNotificacion = (texto) => {
+    setMensaje(texto);
+    setTimeout(() => {
+      setMensaje(null);
+    }, 3000);
+  };
+
+  return (
+    <NotificationContext.Provider value={{ mostrarNotificacion }}>
+      {children}
+      {/* Aquí renderizamos la notificación para TODA la app */}
+      {mensaje && (
+        <div className="notificacion-oval" style={{ zIndex: 99999 }}>
+          {mensaje}
+        </div>
+      )}
+    </NotificationContext.Provider>
+  );
+};
+
+export const useNotification = () => useContext(NotificationContext);
+==================================================
 ARCHIVO: .\frontend\src\utils\facturaPDF.js
 ==================================================
 import jsPDF from "jspdf";
@@ -2373,40 +2886,52 @@ export const generarFacturaPDF = (pedido) => {
   try {
     const doc = new jsPDF();
 
-    // --- COLORES CORPORATIVOS ---
+    // --- COLORES CORPORATIVOS (Extraídos de tu CSS) ---
     const azulCorporativo = [41, 128, 185]; 
+    const colorNeon = [0, 210, 255];      // #00d2ff (Tu color principal de Inicio.css)
+    const fondoOscuro = [43, 43, 61];     // #2b2b3d (Fondo del gradiente de Inicio)
     const grisOscuro = [44, 62, 80];
     const grisClaro = [245, 245, 245];
 
     // ==========================================
-    // 1. ENCABEZADO
+    // 1. ENCABEZADO (ESTILO GAMER/TECH)
     // ==========================================
     
-    // Logo Simulado (Cuadrado Azul)
-    doc.setFillColor(...azulCorporativo);
-    doc.rect(14, 15, 22, 22, "F"); 
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(14);
-    doc.setFont("helvetica", "bold");
-    doc.text("UTN", 17, 27); 
-    doc.setFontSize(7);
-    doc.text("STORE", 17, 32);
+    // --- LOGO CIRCULAR VECTORIAL ---
+    // Recreamos el estilo visual de tu logo sin depender de la imagen externa
+    
+    // 1. Círculo de fondo oscuro
+    doc.setFillColor(...fondoOscuro);
+    doc.setDrawColor(...colorNeon); // Borde color Neón
+    doc.setLineWidth(1.5);          // Borde un poco más grueso para que destaque
+    doc.circle(25, 26, 12, "FD");   // F=Fill (Relleno), D=Draw (Borde)
 
-    // Datos Empresa
+    // 2. Texto "UTN" y "STORE" dentro del círculo
+    doc.setTextColor(255, 255, 255); // Blanco
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("UTN", 25, 29, { align: "center" }); // Centrado
+
+    doc.setFontSize(6);
+    doc.setTextColor(...colorNeon); // La palabra STORE en Neón
+    doc.text("STORE", 25, 33, { align: "center" });
+
+    // --- DATOS DE LA EMPRESA ---
     doc.setTextColor(...grisOscuro);
     doc.setFontSize(20);
-    doc.text("UTN Computer Store", 42, 22);
+    doc.text("UTN Computer Store", 45, 22); // Ajustado X para no pisar el logo
 
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100);
-    doc.text("Av. Tecnología 1234, Ciudad Digital", 42, 28);
-    doc.text("IVA Responsable Inscripto", 42, 33);
-    doc.text("CUIT: 30-11223344-9", 42, 38);
-    doc.text("www.utnstore.com", 42, 43);
+    doc.text("Av. Tecnología 1234, Ciudad Digital", 45, 28);
+    doc.text("IVA Responsable Inscripto", 45, 33);
+    doc.text("CUIT: 30-11223344-9", 45, 38);
+    doc.text("www.utnstore.com", 45, 43);
 
-    // Caja de Info de Factura (Derecha)
+    // --- CAJA DE INFO FACTURA (Derecha) ---
     doc.setDrawColor(200);
+    doc.setLineWidth(0.1); // Volvemos a línea fina
     doc.setFillColor(...grisClaro);
     doc.roundedRect(130, 15, 70, 32, 2, 2, "FD");
 
@@ -2425,7 +2950,7 @@ export const generarFacturaPDF = (pedido) => {
     // ==========================================
     doc.setDrawColor(...azulCorporativo);
     doc.setLineWidth(0.5);
-    doc.line(14, 52, 196, 52); // Línea separadora azul
+    doc.line(14, 52, 196, 52); 
 
     doc.setFontSize(10);
     doc.setTextColor(...grisOscuro);
@@ -2434,7 +2959,6 @@ export const generarFacturaPDF = (pedido) => {
 
     doc.setFont("helvetica", "normal");
     doc.setTextColor(0);
-    // Intentamos buscar el nombre del usuario o cliente
     doc.text(`Cliente: ${pedido.usuarioId || "Consumidor Final"}`, 14, 66);
     doc.text("Condición: Consumidor Final", 14, 71);
     doc.text("Forma de Pago: Contado / Electrónico", 14, 76);
@@ -2445,7 +2969,6 @@ export const generarFacturaPDF = (pedido) => {
     let totalCalculado = 0;
 
     const filas = pedido.lineas ? pedido.lineas.map(item => {
-      // Lógica para asegurar que siempre haya nombre y precio
       const nombre = item.productoNombre || item.nombre || "Producto sin nombre";
       const precioUnitario = item.productoPrecio || item.precio || 0;
       const cantidad = item.cantidad || 1;
@@ -2465,7 +2988,7 @@ export const generarFacturaPDF = (pedido) => {
       startY: 85,
       head: [["DESCRIPCIÓN", "CANT.", "PRECIO UNIT.", "SUBTOTAL"]],
       body: filas,
-      theme: 'striped', // Rayado profesional (gris/blanco)
+      theme: 'striped',
       headStyles: { 
           fillColor: azulCorporativo, 
           textColor: 255, 
@@ -2478,10 +3001,10 @@ export const generarFacturaPDF = (pedido) => {
           valign: 'middle' 
       },
       columnStyles: {
-        0: { halign: 'left' },    // Nombre
-        1: { halign: 'center' },  // Cantidad
-        2: { halign: 'right' },   // Precio
-        3: { halign: 'right' }    // Subtotal
+        0: { halign: 'left' },
+        1: { halign: 'center' },
+        2: { halign: 'right' },
+        3: { halign: 'right' }
       },
       alternateRowStyles: {
           fillColor: [245, 245, 250]
@@ -2489,32 +3012,45 @@ export const generarFacturaPDF = (pedido) => {
     });
 
     // ==========================================
-    // 4. TOTALES (SOLUCIÓN AL SOLAPAMIENTO)
+    // 4. TOTALES (DINÁMICO Y CORREGIDO)
     // ==========================================
     const finalY = doc.lastAutoTable.finalY + 10;
     
-    // Línea sobre el total
     doc.setDrawColor(200);
-    doc.line(130, finalY, 196, finalY);
+    doc.setLineWidth(0.1);
+    doc.line(130, finalY, 196, finalY); // Línea divisoria
 
-    // Etiqueta "TOTAL" (A la izquierda: X=125)
+    // Configuración de fuente para el PRECIO
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(...azulCorporativo);
+
+    // Preparar el string del precio
+    const precioTexto = `$ ${totalCalculado.toLocaleString('es-AR', {minimumFractionDigits: 2})}`;
+    
+    // --- LÓGICA CLAVE ---
+    // 1. Medimos cuánto ocupa el precio en píxeles
+    const anchoPrecio = doc.getTextWidth(precioTexto);
+    // 2. Definimos dónde termina la hoja (margen derecho)
+    const margenDerecho = 196;
+
+    // 3. Imprimimos el precio pegado a la derecha
+    doc.text(precioTexto, margenDerecho, finalY + 10, { align: "right" });
+
+    // 4. Calculamos dónde poner la etiqueta "TOTAL A PAGAR"
+    //    Posición = MargenDerecho - AnchoDelPrecio - 5px de aire
     doc.setFontSize(14);
     doc.setTextColor(...grisOscuro);
-    doc.setFont("helvetica", "bold");
-    doc.text("TOTAL A PAGAR:", 125, finalY + 10);
-
-    // Valor del Total (Alineado a la derecha: X=196)
-    // Al estar en extremos opuestos, YA NO SE PISARÁN
-    doc.setFontSize(16);
-    doc.setTextColor(...azulCorporativo);
-    doc.text(`$ ${totalCalculado.toLocaleString('es-AR', {minimumFractionDigits: 2})}`, 196, finalY + 10, { align: "right" });
+    
+    // Alineamos a la derecha respecto a ese punto calculado, para que crezca hacia la izquierda
+    doc.text("TOTAL A PAGAR:", margenDerecho - anchoPrecio - 5, finalY + 10, { align: "right" });
 
     // ==========================================
     // 5. PIE DE PÁGINA
     // ==========================================
     const pageHeight = doc.internal.pageSize.height;
     
-    // Franja decorativa inferior
+    // Franja decorativa oscura
     doc.setFillColor(...grisOscuro);
     doc.rect(0, pageHeight - 15, 210, 15, "F");
     

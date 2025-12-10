@@ -1,40 +1,67 @@
-/* --- FONDO GENERAL SUAVE --- */
+/* frontend/src/components/Admin.css */
+
+/* --- FONDO GENERAL (NÍTIDO) --- */
 .admin-container {
   min-height: 100vh;
   padding: 40px 20px;
-  /* Cambio: De negro puro a un gris oscuro azulado (Dark Slate) */
-  background-color: #1a1a24; 
-  color: #c0c0d0; /* Texto gris claro, no blanco puro */
+  position: relative; 
+  
+  /* 1. Imagen de fondo solicitada */
+  background-image: url('/inicio-bg.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
+  color: #c0c0d0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
 }
 
+/* 2. Capa oscura para leer el texto (SIN DESENFOQUE) */
+.admin-container::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  
+  /* Oscurecemos la imagen al 85% para que resalten los formularios */
+  background-color: rgba(10, 10, 20, 0.85); 
+  
+  /* SIN backdrop-filter: blur(...) */
+  
+  z-index: 0; 
+}
+
+/* 3. Contenido por encima del fondo */
+.admin-container > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* --- TÍTULOS --- */
 .admin-title {
-  color: #82b1ff; /* Azul suave pastel */
+  color: #82b1ff;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 30px;
   text-align: center;
   font-size: 2.2rem;
   font-weight: 600;
-  /* Quitamos el text-shadow fuerte para que no encandile */
 }
 
 .section-title {
   color: #e0e0e0;
-  border-bottom: 2px solid #3f51b5; /* Línea más oscura y sobria */
+  border-bottom: 2px solid #3f51b5;
   display: inline-block;
   padding-bottom: 5px;
   margin-bottom: 25px;
   font-size: 1.4rem;
 }
 
-/* --- TARJETAS (SOBRIAS) --- */
+/* --- TARJETAS --- */
 .admin-card {
-  background: #23232e; /* Fondo sólido, no transparente */
-  border: 1px solid #333; /* Borde sutil */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  background: #23232e; 
+  border: 1px solid #444;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   padding: 40px;
   margin: 0 auto 40px auto;
@@ -52,7 +79,7 @@
 }
 
 .admin-form input {
-  background-color: #2b2b36; /* Un poco más claro que el fondo */
+  background-color: #2b2b36;
   border: 1px solid #444;
   color: #eee;
   padding: 12px;
@@ -63,7 +90,7 @@
 }
 
 .admin-form input:focus {
-  border-color: #82b1ff; /* Acento suave al escribir */
+  border-color: #82b1ff;
 }
 
 .admin-form input::placeholder {
@@ -72,11 +99,11 @@
 
 /* --- BOTÓN DE ENVÍO --- */
 .btn-admin-submit {
-  background-color: #3f51b5; /* Azul índigo mate */
+  background-color: #3f51b5;
   color: white;
   border: none;
   padding: 12px;
-  border-radius: 6px; /* Menos redondo */
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
@@ -86,31 +113,26 @@
 }
 
 .btn-admin-submit:hover {
-  background-color: #5c6bc0; /* Un poco más claro al pasar el mouse */
+  background-color: #5c6bc0;
 }
 
-/* --- NOTIFICACIÓN FLOTANTE (REUTILIZABLE) --- */
+/* --- NOTIFICACIÓN FLOTANTE --- */
 .notificacion-oval {
   position: fixed;
-  top: 50%;              /* Centrado Vertical */
-  left: 50%;             /* Centrado Horizontal */
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  
-  background-color: rgba(30, 30, 40, 0.95); /* Fondo oscuro semitransparente */
-  color: #00d2ff;        /* Texto Cyan Neón */
+  background-color: rgba(30, 30, 40, 0.95);
+  color: #00d2ff;
   border: 1px solid #00d2ff;
-  
   padding: 20px 40px;
   border-radius: 50px;   
-  
   font-family: 'Segoe UI', sans-serif;
   font-weight: 600;
   font-size: 1.1rem;
   text-align: center;
-  
-  box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); /* Resplandor suave */
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
   z-index: 9999;
-  
   animation: aparecerCentro 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -119,24 +141,21 @@
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* --- MODAL DE CONFIRMACIÓN (ESTILO GAMER) --- */
+/* --- MODAL DE CONFIRMACIÓN --- */
 .modal-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85); /* Fondo muy oscuro para bloquear */
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000; /* Por encima de todo */
-  backdrop-filter: blur(4px); /* Efecto borroso pro */
+  z-index: 10000;
+  backdrop-filter: blur(4px);
 }
 
 .modal-neon {
   background-color: #1a1a24;
-  border: 1px solid #ff5252; /* Borde Rojo para acciones peligrosas */
+  border: 1px solid #ff5252;
   box-shadow: 0 0 20px rgba(255, 82, 82, 0.2);
   padding: 30px;
   border-radius: 12px;

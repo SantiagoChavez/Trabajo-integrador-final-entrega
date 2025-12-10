@@ -1,0 +1,74 @@
+/* frontend/src/components/Pedidos.css */
+
+.pedidos-container {
+    padding: 20px;
+    color: #e0e0e0; /* TEXTO CLARO (Soluciona lo que no se veía) */
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .pedidos-container h2 {
+    text-align: center;
+    color: #00d2ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+  }
+  
+  /* TARJETA DE CADA PEDIDO */
+  .pedido-card {
+    /* Fondo oscuro semi-transparente para que se lea sobre la imagen de fondo */
+    background-color: rgba(20, 20, 30, 0.90); 
+    border: 1px solid #444;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  }
+  
+  .pedido-card h4 {
+    color: #82b1ff;
+    margin-top: 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .pedido-card p {
+    margin: 5px 0;
+    color: #ccc;
+    font-size: 0.95rem;
+  }
+  
+  /* TABLA INTERNA */
+  .tabla-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    background-color: rgba(0,0,0,0.3); /* Un poco más oscuro dentro de la tabla */
+    border-radius: 4px;
+  }
+  
+  .tabla-pedidos th,
+  .tabla-pedidos td {
+    border: 1px solid #555;
+    padding: 10px;
+    text-align: center;
+    color: #ddd; /* Asegura que el texto de la tabla sea claro */
+  }
+  
+  .tabla-pedidos th {
+    background-color: #2b2b36;
+    color: #82b1ff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+  
+  .tabla-pedidos td:first-child {
+      text-align: left;
+      color: white;
+  }s

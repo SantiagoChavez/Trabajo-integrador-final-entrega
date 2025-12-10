@@ -1,22 +1,32 @@
 import React from "react";
 import "./Carrito.css";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
+import { useNotification } from "../context/NotificationContext";
 
-// 1. AHORA RECIBIMOS LOS DATOS DESDE APP.JSX (PROPS)
-function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
+function Carrito({ carrito, restarDelCarrito, vaciarCarrito, usuario }) {
   
   const navigate = useNavigate();
-
-  // Calcular el precio total
+  const { mostrarNotificacion } = useNotification();
+  
   const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
 
   const crearPedido = () => {
+    if (!usuario) {
+        mostrarNotificacion("🔒 Inicia sesión para finalizar la compra");
+        setTimeout(() => {
+            navigate("/login");
+        }, 2000);
+        return;
+    }
+
     if (carrito.length === 0) {
-        alert("El carrito está vacío");
+        mostrarNotificacion("⚠️ El carrito está vacío");
         return;
     }
 
     const pedido = {
+      usuarioId: usuario.username, 
       estado: "nuevo",
       lineas: carrito.map((item) => ({
         productoId: item.id,
@@ -34,15 +44,15 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
         return res.json();
       })
       .then(() => {
-        alert("✅ ¡Pedido creado con éxito!");
-        // Usamos la función que nos prestó App.jsx para limpiar
+        mostrarNotificacion("✅ ¡Pedido creado con éxito!");
         vaciarCarrito(); 
-        // Opcional: redirigir al inicio o a historial
-        navigate("/pedidos");
+        setTimeout(() => {
+            navigate("/pedidos");
+        }, 2000);
       })
       .catch((err) => {
         console.error("Error al crear pedido", err);
-        alert("❌ Error al crear el pedido");
+        mostrarNotificacion("❌ Error al procesar el pedido");
       });
   };
 
@@ -53,7 +63,9 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
       {carrito.length === 0 ? (
         <div className="carrito-vacio">
             <p>No hay productos en el carrito.</p>
-            <button onClick={() => navigate("/productos")}>Ir al Catálogo</button>
+            <button className="btn-confirmar" style={{background: '#444', marginTop:'10px'}} onClick={() => navigate("/productos")}>
+                Ir al Catálogo
+            </button>
         </div>
       ) : (
         <div>
@@ -67,12 +79,15 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito }) {
                 
                 <div className="controles-cantidad">
                     <span className="cantidad">Cant: {item.cantidad}</span>
-                    {/* Usamos la función que viene de App.jsx */}
+                    
+                    {/* --- BOTÓN AHORA TIENE TEXTO E ÍCONO --- */}
                     <button 
                         className="btn-eliminar" 
                         onClick={() => restarDelCarrito(item.id)}
+                        title="Eliminar producto"
                     >
-                        ➖
+                         <FaTrash size={14} /> 
+                         <span>Eliminar</span>
                     </button>
                 </div>
               </li>
