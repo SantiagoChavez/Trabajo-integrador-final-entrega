@@ -1,163 +1,65 @@
-# Trabajo Integrador Final - E-commerce Fullstack (UTN)
-
-Este proyecto es una aplicación web **Fullstack de E-commerce** para una Tienda de Insumos Informáticos.
-Consiste en un sistema completo de gestión de productos, control de stock y pedidos, integrando un backend robusto en **Spring Boot** con base de datos **MongoDB** y un frontend moderno en **React**.
-
-## 📂 Estructura del Proyecto
-
-```text
-Trabajo-entregaFinal/
-│
-├── backend/             # API REST con Spring Boot & MongoDB
-│   └── src/main/java/com/entregaFinal/gestion/
-│       ├── controller/  # Controladores (Auth, Productos, Pedidos)
-│       ├── model/       # Modelos de datos (Usuario, Producto, Pedido)
-│       ├── repository/  # Interfaces MongoRepository
-│       └── service/     # Lógica de negocio y transacciones
-│
-├── frontend/            # Cliente SPA con React + Vite
-│   ├── public/          # Assets estáticos (logo.jpg, etc.)
-│   └── src/
-│       ├── components/  # Componentes (Navbar, Carrito, Gestión, etc.)
-│       └── App.jsx      # Rutas y lógica de seguridad
-│
-└── start_proyecto.bat   # Script de arranque automático (Mongo + Back + Front)
-
-¡Por supuesto! Aquí tienes el código Markdown puro y listo para copiar.
-Solo tienes que copiar todo lo que está dentro del bloque de abajo y pegarlo reemplazando todo el contenido de tu archivo README.md.
-Markdown
-# Trabajo Integrador Final - E-commerce Fullstack (UTN)
-
-Este proyecto es una aplicación web **Fullstack de E-commerce** para una Tienda de Insumos Informáticos.
-Consiste en un sistema completo de gestión de productos, control de stock y pedidos, integrando un backend robusto en **Spring Boot** con base de datos **MongoDB** y un frontend moderno en **React**.
-
-## 📂 Estructura del Proyecto
-
-```text
-Trabajo-entregaFinal/
-│
-├── backend/             # API REST con Spring Boot & MongoDB
-│   └── src/main/java/com/entregaFinal/gestion/
-│       ├── controller/  # Controladores (Auth, Productos, Pedidos)
-│       ├── model/       # Modelos de datos (Usuario, Producto, Pedido)
-│       ├── repository/  # Interfaces MongoRepository
-│       └── service/     # Lógica de negocio y transacciones
-│
-├── frontend/            # Cliente SPA con React + Vite
-│   ├── public/          # Assets estáticos (logo.jpg, etc.)
-│   └── src/
-│       ├── components/  # Componentes (Navbar, Carrito, Gestión, etc.)
-│       └── App.jsx      # Rutas y lógica de seguridad
-│
-└── start_proyecto.bat   # Script de arranque automático (Mongo + Back + Front)
-🚀 Tecnologías Utilizadas
-Backend
-•	Java: 17 / 21+
-•	Spring Boot: 3.2.5
-•	Spring Data MongoDB: Para la persistencia de datos NoSQL.
+TRABAJO INTEGRADOR FINAL - E-COMMERCE FULLSTACK (UTN)
+Este proyecto es una aplicación web Fullstack de E-commerce diseñada para una Tienda de Insumos Informáticos. El sistema ofrece una solución integral que abarca desde el catálogo público y carrito de compras para clientes, hasta un panel de administración avanzado con gestión de stock, control de pedidos, facturación PDF y logística.
+Desarrollado con: Java Spring Boot, MongoDB y React (Vite).
+________________________________________
+TECNOLOGÍAS UTILIZADAS
+Backend (API REST)
+•	Java 17+ & Spring Boot 3.x: Núcleo de la aplicación.
+•	Spring Data MongoDB: Persistencia NoSQL flexible y escalable.
 •	Maven: Gestión de dependencias.
-Frontend
-•	React: Librería de UI.
-•	Vite: Entorno de desarrollo rápido.
-•	React Router DOM: Manejo de rutas y protección de vistas (Rutas Privadas).
-•	CSS3: Estilos personalizados y diseño responsivo.
-•	React Icons: Iconografía.
-Base de Datos
-•	MongoDB: Base de datos NoSQL orientada a documentos (Reemplaza al antiguo sistema JSON para mayor escalabilidad).
+Frontend (SPA)
+•	React 18: Librería de interfaz de usuario.
+•	Vite: Entorno de desarrollo de alto rendimiento.
+•	React Router v6: Navegación SPA con rutas protegidas y "Future Flags" activadas.
+•	jsPDF & AutoTable: Generación de facturas PDF en el cliente.
+•	CSS3 Moderno: Diseño "Dark Neon" con efectos de glassmorphism y animaciones.
 ________________________________________
-✨ Funcionalidades Implementadas
-🔐 Autenticación y Roles
-El sistema cuenta con un login funcional que diferencia entre dos tipos de usuarios:
-1.	Cliente (USER): Acceso a catálogo y compras.
-2.	Operador (ADMIN): Acceso al panel de gestión logística.
-🛒 Experiencia de Cliente
-•	Catálogo Público: Visualización de productos con stock en tiempo real.
-•	Filtros: Navegación por categorías dinámicas.
-•	Carrito de Compras:
-o	Persistencia de estado durante la sesión.
-o	Cálculo automático de totales.
-o	Validación de stock al intentar agregar más unidades de las disponibles.
-•	Confirmación de Pedido: Genera una orden y descuenta stock automáticamente.
-⚙️ Panel de Gestión (Backoffice)
-•	Ruta Protegida: Accesible solo para usuarios con rol ADMIN (/gestion).
-•	CRUD de Productos:
-o	Alta: Formulario para crear nuevos insumos.
-o	Modificación: Edición de precios, nombres y corrección de stock (Edición "in-line").
-o	Baja: Eliminación lógica/física de productos.
-•	Control Visual: Alertas de stock bajo o agotado en la tabla de gestión.
+FUNCIONALIDADES CLAVE
+1.	Seguridad y Roles
+o	Autenticación: Login y Registro funcional.
+o	Roles:
+	USER: Compra, carrito persistente, historial de pedidos.
+	ADMIN: Acceso exclusivo al panel de gestión (/gestion).
+o	Data Initializer: El sistema crea automáticamente usuarios de prueba al arrancar si no existen.
+2.	Experiencia de Cliente
+o	Catálogo Dinámico: Búsqueda inteligente por nombre, marca o categoría.
+o	Stock en Tiempo Real: Validación inmediata al agregar al carrito (no permite comprar más de lo disponible).
+o	Carrito Persistente: Los productos se guardan en localStorage.
+o	Mis Pedidos: Visualización del estado de las compras (Pendiente, Facturado, Despachado).
+3.	Panel de Administración (Backoffice)
+o	Gestión de Productos:
+	Alta, Baja y Modificación (CRUD).
+	Edición "In-line" (directa en la tabla) para cambios rápidos de precio/stock.
+	Modal de vista previa de imágenes con zoom.
+o	Gestión de Pedidos Avanzada:
+	Selección Múltiple: Checkboxes para seleccionar y eliminar varios pedidos a la vez.
+	Restauración de Stock: Al eliminar un pedido (individual o masivo), el stock de los productos regresa automáticamente al inventario.
+	Facturación: Generación de Facturas PDF profesionales con un clic.
+	Flujo de Estado: Ciclo completo de venta (Pendiente -> Facturar -> Despachar).
 ________________________________________
-🛠️ Instalación y Ejecución
-Requisitos Previos
-•	Tener instalado Java JDK.
-•	Tener instalado Node.js.
-•	Tener instalado MongoDB Community Server y asegurase de que corre en el puerto 27017.
-Opción 1: Ejecución Automática (Windows)
-Ejecutar el archivo start_proyecto.bat. Este script se encargará de:
-1.	Levantar el servicio de MongoDB (mongod).
-2.	Iniciar el Backend Spring Boot (puerto 8080).
-3.	Iniciar el Frontend Vite (puerto 5176).
-4.	Abrir el navegador automáticamente.
-Opción 2: Ejecución Manual
-1. Base de Datos:
-Asegúrate de tener MongoDB corriendo localmente.
-2. Backend:
-Bash
-cd backend
-./mvnw spring-boot:run
-3. Frontend:
-Bash
-cd frontend
-npm install
-npm run dev
+ESTRUCTURA DEL PROYECTO
+Trabajo-entregaFinal/ │ ├── backend/ # Servidor Spring Boot │ └── src/main/java/com/entregaFinal/gestion/ │ ├── controller/ # Endpoints (Auth, Pedidos, Productos) │ ├── model/ # Entidades Mongo (Documentos) │ ├── repository/ # Interfaces de acceso a datos │ ├── service/ # Lógica de negocio (Stock, Validaciones) │ └── Preentrega... # Main Application │ ├── frontend/ # Cliente React │ ├── src/ │ │ ├── components/ # Componentes (AdminPedidos, Carrito, etc.) │ │ ├── context/ # Contexto de Notificaciones Globales │ │ ├── utils/ # Generador de PDF │ │ └── App.jsx # Router y Configuración │ └── public/ # Assets (Imágenes) │ └── README.md # Documentación
 ________________________________________
-⚠️ Configuración Inicial (Primer Uso)
-Como la base de datos inicia vacía, es necesario crear el primer usuario Administrador manualmente.
-1.	Iniciar el proyecto.
-2.	Abrir la consola del navegador (F12) o Postman.
-3.	Ejecutar el siguiente fetch para crear al Admin:
-JavaScript
-fetch('http://localhost:8080/api/auth/registro', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ 
-      username: "admin", 
-      password: "123", 
-      rol: "ADMIN" 
-  })
-}).then(res => res.json()).then(console.log);
-4.	(Opcional) Crear un cliente de prueba:
-JavaScript
-fetch('http://localhost:8080/api/auth/registro', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ 
-      username: "cliente", 
-      password: "123", 
-      rol: "USER" 
-  })
-}).then(res => res.json()).then(console.log);
+INSTALACIÓN Y EJECUCIÓN
+Requisitos:
+•	Java JDK 17 o superior.
+•	Node.js (LTS).
+•	MongoDB (Corriendo en puerto 27017).
+Paso 1: Backend
+1.	Abrir terminal en la carpeta "backend".
+2.	Ejecutar: ./mvnw spring-boot:run (El servidor iniciará en http://localhost:8080)
+Paso 2: Frontend
+1.	Abrir terminal en la carpeta "frontend".
+2.	Instalar dependencias (solo la primera vez): npm install
+3.	Iniciar servidor de desarrollo: npm run dev (La web abrirá en http://localhost:5176)
 ________________________________________
-📡 Endpoints Principales de la API
-Método	Endpoint	Descripción
-POST	/api/auth/login	Iniciar sesión y obtener rol
-POST	/api/auth/registro	Registrar nuevo usuario
-GET	/api/productos	Listar todos los productos
-POST	/api/productos	Crear producto (Admin)
-PUT	/api/productos/{id}	Modificar producto (Admin)
-DELETE	/api/productos/{id}	Eliminar producto (Admin)
-POST	/api/pedidos	Crear pedido y descontar stock
+USUARIOS DE PRUEBA (AUTOMÁTICOS)
+Al iniciar el backend por primera vez, el sistema creará automáticamente estos usuarios para que puedas probar todo:
+Rol: Administrador Usuario: admin Contraseña: 1234 Acceso: Panel de Gestión completo
+Rol: Cliente Usuario: cliente Contraseña: 1234 Acceso: Catálogo y Compras
 ________________________________________
-📝 Changelog
-v3.0 - Final Release (Noviembre 2025)
-✅ Implementación de MongoDB real (reemplaza JSON).
-✅ Sistema de Login y Roles (Admin/User).
-✅ Panel de Gestión separado del catálogo.
-✅ Lógica de descuento de stock transaccional.
-✅ Rediseño de UI: Home profesional, Logo dinámico, Navbar con contador.
-v2.0 - Prototipo JSON
-•	Persistencia en archivos planos.
-v1.0 - Versión H2
-•	Base de datos en memoria.
+ENDPOINTS PRINCIPALES
+POST /api/auth/login -> Autenticación JWT (Simulada) GET /api/productos -> Obtener catálogo POST /api/pedidos -> Generar orden de compra DELETE /api/pedidos/{id} -> Eliminar pedido y devolver stock PUT /api/pedidos/{id}/estado -> Cambiar estado (Facturación)
 ________________________________________
-Autor: Chavez Santiago Ezequiel
-Institución: UTN Avellaneda - Tecnicatura Universitaria en Programación
+AUTOR
+Chavez Santiago Ezequiel Institución: UTN Avellaneda - Tecnicatura Universitaria en Programación
