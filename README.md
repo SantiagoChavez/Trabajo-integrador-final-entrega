@@ -62,4 +62,6 @@ ENDPOINTS PRINCIPALES
 POST /api/auth/login -> Autenticación JWT (Simulada) GET /api/productos -> Obtener catálogo POST /api/pedidos -> Generar orden de compra DELETE /api/pedidos/{id} -> Eliminar pedido y devolver stock PUT /api/pedidos/{id}/estado -> Cambiar estado (Facturación)
 ________________________________________
 AUTOR
-Chavez Santiago Ezequiel Institución: UTN Avellaneda - Tecnicatura Universitaria en Programación
+Chavez Santiago Ezequiel 
+Institución: UTN Avellaneda
+Tecnicatura Universitaria en Programación
