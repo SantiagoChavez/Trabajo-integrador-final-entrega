@@ -8,7 +8,7 @@
   color: #cfcfcf; 
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 .tabla-productos th,
@@ -16,7 +16,7 @@
   border-bottom: 1px solid #333;
   padding: 15px;
   text-align: center;
-  vertical-align: middle; /* Alinea verticalmente los inputs */
+  vertical-align: middle;
 }
 
 .tabla-productos th {
@@ -58,123 +58,66 @@ button {
   transition: all 0.2s;
 }
 
-/* --- CAMBIO DE COLOR DEL BOTÓN ELIMINAR --- */
 .btn-eliminar {
-  /* Rojo ladrillo suave / Pastel */
-  background-color: #a64444; 
+  background-color: #a64444;
   color: white;
 }
 
 .btn-eliminar:hover {
-  /* Un poco más vivo al pasar el mouse, pero sin quemar la retina */
-  background-color: #c55555; 
+  background-color: #c55555;
   transform: scale(1.05);
 }
 
-/* --- NOTIFICACIÓN FLOTANTE (CENTRADA) --- */
-.notificacion-oval {
-  position: fixed;
-  top: 50%;              /* Centrado Vertical */
-  left: 50%;             /* Centrado Horizontal */
-  transform: translate(-50%, -50%); /* Ajuste exacto al centro */
-  
-  background-color: rgba(30, 30, 40, 0.98); /* Fondo oscuro sólido */
-  color: #82b1ff;        /* Azul Pastel */
-  border: 2px solid #82b1ff; /* Borde un poquito más grueso */
-  
-  padding: 25px 60px;    /* Más grande para que se lea bien en el centro */
-  border-radius: 50px;   
-  
-  font-family: 'Segoe UI', sans-serif;
-  font-weight: bold;
-  font-size: 1.2rem;     /* Letra más grande */
-  text-align: center;
-  
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7); /* Sombra intensa para destacar */
-  z-index: 9999;
-  
-  /* Animación de "Zoom" con rebote suave */
-  animation: aparecerCentro 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-/* Animación: Empieza pequeño y crece */
-@keyframes aparecerCentro {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-/* =========================================
-   MODAL DE IMAGEN (MEJORADO - GRANDE Y LIMPIO)
-   ========================================= */
-
-/* 1. EL FONDO DE LA PANTALLA (OSCURO) */
+/* --- MODAL DE IMAGEN (MEJORADO - GRANDE Y LIMPIO) --- */
 .modal-imagen-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.90); /* Negro casi total, muy elegante */
+  background-color: rgba(0, 0, 0, 0.90);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10000;
-  backdrop-filter: blur(8px); /* Blur fuerte al fondo */
+  backdrop-filter: blur(8px);
   animation: aparecerSuave 0.2s ease-out;
 }
 
-/* 2. EL CONTENEDOR DE LA IMAGEN (SIN FONDO AZUL) */
 .modal-imagen-contenido {
   position: relative;
-  /* Quitamos cualquier background-color para que no se vea azul */
   background: transparent; 
   box-shadow: none; 
   border: none;
-  
-  /* Permitimos que crezca */
-  max-width: 95vw; /* 95% del ancho de pantalla */
-  max-height: 95vh; /* 95% del alto de pantalla */
-  
+  max-width: 95vw;
+  max-height: 95vh;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* 3. LA IMAGEN EN SÍ (GIGANTE) */
 .modal-imagen-contenido img {
   width: auto; 
   height: auto;
-  
-  /* Esto asegura que la imagen sea lo más grande posible sin salirse de la pantalla */
   max-width: 90vw;
   max-height: 90vh;
-  
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); /* Sombra para que "flote" */
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
 }
 
-/* 4. EL BOTÓN CERRAR (FLOTANTE Y MODERNO) */
 .cerrar-modal {
   position: absolute;
-  top: -40px;   /* Lo sacamos un poco hacia arriba de la imagen */
-  right: -40px; /* Lo sacamos hacia la derecha */
-  
+  top: -40px;
+  right: -40px;
   color: white;
-  background-color: rgba(255, 255, 255, 0.1); /* Círculo sutil */
+  background-color: rgba(255, 255, 255, 0.1);
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  
   display: flex;
   justify-content: center;
   align-items: center;
-  
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
@@ -183,13 +126,178 @@ button {
 }
 
 .cerrar-modal:hover {
-  background-color: #ff5252; /* Rojo al pasar el mouse */
+  background-color: #ff5252;
   color: white;
-  transform: rotate(90deg); /* Pequeña animación al tocar */
+  transform: rotate(90deg);
 }
 
-/* Animación de entrada */
 @keyframes aparecerSuave {
     from { opacity: 0; transform: scale(0.9); }
     to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes aparecerCentro {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   NUEVOS ESTILOS PARA EL MODAL DE DETALLE (CARD FLOTANTE) 
+   ========================================================= */
+
+.modal-detalle-card {
+  background: #1a1a24;
+  border: 1px solid #00d2ff;
+  box-shadow: 0 0 40px rgba(0, 210, 255, 0.2);
+  border-radius: 12px;
+  width: 700px;
+  max-width: 90%;
+  padding: 30px;
+  position: relative;
+  animation: aparecerCentro 0.3s ease-out;
+}
+
+.cerrar-modal-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  color: #fff;
+  font-size: 1.5rem;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.cerrar-modal-btn:hover {
+  color: #ff5252;
+}
+
+.detalle-contenido {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.detalle-img-container img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #333;
+}
+
+.detalle-info {
+  flex: 1;
+  text-align: left;
+}
+
+.detalle-info h3 {
+  color: #fff;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+
+.categoria-badge {
+  background: rgba(0, 210, 255, 0.1);
+  color: #00d2ff;
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.descripcion-texto {
+  color: #ccc;
+  line-height: 1.5;
+  margin: 15px 0;
+  font-size: 1rem;
+}
+
+.precio-grande {
+  font-size: 2rem;
+  color: #00d2ff;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.btn-agregar-grande {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(45deg, #00d2ff, #007bff);
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  margin: 0;
+  box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+}
+
+.btn-agregar-grande:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 210, 255, 0.5);
+}
+
+/* Responsivo para celulares */
+@media (max-width: 768px) {
+  .detalle-contenido {
+    flex-direction: column;
+  }
+  .detalle-img-container img {
+    width: 100%;
+    height: 200px;
+  }
+}
+
+/* ... Tus estilos anteriores ... */
+
+/* ESTILOS PARA INPUTS OSCUROS EN EL MODAL DE EDICIÓN */
+.input-detalle-dark,
+.textarea-detalle-dark,
+.input-titulo-dark,
+.input-precio-dark {
+  background-color: #0f0f15;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.input-detalle-dark:focus,
+.textarea-detalle-dark:focus,
+.input-titulo-dark:focus,
+.input-precio-dark:focus {
+  outline: none;
+  border-color: #00d2ff;
+  box-shadow: 0 0 8px rgba(0, 210, 255, 0.2);
+}
+
+.input-titulo-dark {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.input-precio-dark {
+  font-size: 2rem;
+  color: #00d2ff;
+  font-weight: bold;
+  width: 150px;
+}
+
+.textarea-detalle-dark {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  resize: vertical; /* Permite estirar hacia abajo */
+  line-height: 1.5;
 }

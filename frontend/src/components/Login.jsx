@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+// 1. IMPORTAMOS EL HOOK
+import { useNotification } from '../context/NotificationContext';
 
 function Login({ onLogin }) {
-  // Estado para saber si el usuario quiere LOGIN o REGISTRO
-  const [esRegistro, setEsRegistro] = useState(false);
+  // 2. USAMOS EL HOOK
+  const { mostrarNotificacion } = useNotification();
   
+  const [esRegistro, setEsRegistro] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -14,14 +17,11 @@ function Login({ onLogin }) {
     e.preventDefault();
     setError('');
 
-    // 1. DETERMINAR URL SEGÚN EL MODO
     const url = esRegistro 
       ? 'http://localhost:8080/api/auth/registro' 
       : 'http://localhost:8080/api/auth/login';
 
-    // 2. PREPARAR DATOS
     const payload = { username, password };
-    // Si es registro, aseguramos que el rol sea USER por defecto
     if(esRegistro) payload.rol = 'USER';
 
     fetch(url, {
@@ -30,7 +30,6 @@ function Login({ onLogin }) {
       body: JSON.stringify(payload)
     })
     .then(async res => {
-      // Si el backend responde con error (ej: 400 o 500), lanzamos excepción
       if (!res.ok) {
           const text = await res.text();
           throw new Error(text || "Error en la operación");
@@ -39,15 +38,16 @@ function Login({ onLogin }) {
     })
     .then(data => {
       if (esRegistro) {
-        // --- CASO REGISTRO EXITOSO ---
-        alert("✅ ¡Cuenta creada con éxito! Ahora inicia sesión.");
+        // --- 3. REEMPLAZO ALERT POR NOTIFICACIÓN ---
+        mostrarNotificacion("✅ ¡Cuenta creada con éxito! Ahora inicia sesión.");
+        
         setEsRegistro(false); // Volvemos al modo login
         setPassword('');      // Limpiamos pass
       } else {
-        // --- CASO LOGIN EXITOSO ---
-        onLogin(data); // Actualizamos el estado global en App.jsx
+        // --- LOGIN EXITOSO ---
+        onLogin(data);
+        mostrarNotificacion(`👋 ¡Bienvenido, ${data.username}!`); // Agregué un saludo lindo acá también
         
-        // Redirección según rol
         if (data.rol === 'ADMIN') {
           navigate('/gestion');
         } else {
@@ -57,15 +57,16 @@ function Login({ onLogin }) {
     })
     .catch(err => {
       console.error(err);
-      // Mostramos el mensaje limpio al usuario
       setError(esRegistro ? "Error: El usuario quizás ya existe." : "Usuario o contraseña incorrectos.");
+      // Opcional: Si querés que el error también flote, descomentá esto:
+      // mostrarNotificacion("❌ " + (esRegistro ? "Error al registrar" : "Error al ingresar"));
     });
   };
 
   const handleOlvidePassword = (e) => {
       e.preventDefault();
-      // Como no tenemos servidor de correo real, mostramos un aviso simulado
-      alert("🔒 Para recuperar tu contraseña, por favor contacta a soporte@utnstore.com o pide al administrador que restablezca tu cuenta.");
+      // Reemplazamos el alert también aquí
+      mostrarNotificacion("🔒 Contacta a soporte@utnstore.com para recuperar tu clave.");
   };
 
   return (
@@ -142,10 +143,8 @@ function Login({ onLogin }) {
         </button>
       </form>
 
-      {/* --- ENLACES DE AYUDA --- */}
       <div style={{ marginTop: '20px', fontSize: '0.9rem', display: 'flex', flexDirection: 'column', gap: '10px' }}>
           
-          {/* Toggle entre Login y Registro */}
           <div>
             {esRegistro ? "¿Ya tienes cuenta? " : "¿No tienes cuenta? "}
             <button 
@@ -164,7 +163,6 @@ function Login({ onLogin }) {
             </button>
           </div>
 
-          {/* Olvidé contraseña (solo visible en Login) */}
           {!esRegistro && (
               <a href="#" onClick={handleOlvidePassword} style={{ color: '#666', textDecoration: 'none', fontSize: '0.85rem' }}>
                   ¿Olvidaste tu contraseña?

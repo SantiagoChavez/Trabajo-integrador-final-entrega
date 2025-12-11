@@ -43,4 +43,10 @@ public class PedidoController {
     public Pedido actualizarEstado(@PathVariable String id, @RequestParam String nuevoEstado) {
         return pedidoService.updateEstado(id, nuevoEstado);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Devuelve 204 No Content al tener éxito
+    public void deletePedido(@PathVariable String id) {
+        pedidoService.deletePedido(id);
+    }
 }

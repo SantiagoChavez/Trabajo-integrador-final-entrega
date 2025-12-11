@@ -74,7 +74,7 @@ function App() {
   return (
     // 4. ENVOLVEMOS TODO CON EL PROVEEDOR DE NOTIFICACIONES
     <NotificationProvider>
-      <Router>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Navbar 
           usuario={usuario} 
           onLogout={handleLogout} 
@@ -105,7 +105,7 @@ function App() {
                </div>
             } />
 
-            <Route path="/pedidos" element={<div style={{ padding: '20px' }}><Pedidos /></div>} />
+            <Route path="/pedidos" element={<div style={{ padding: '20px' }}><Pedidos usuario={usuario} /></div>} />
             <Route path="/categorias" element={<Categorias />} />
 
             {/* --- ZONA ADMIN --- */}

@@ -890,43 +890,70 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 ==================================================
 ARCHIVO: .\frontend\src\components\Admin.css
 ==================================================
-/* --- FONDO GENERAL SUAVE --- */
+/* frontend/src/components/Admin.css */
+
+/* --- FONDO GENERAL (NÍTIDO) --- */
 .admin-container {
   min-height: 100vh;
   padding: 40px 20px;
-  /* Cambio: De negro puro a un gris oscuro azulado (Dark Slate) */
-  background-color: #1a1a24; 
-  color: #c0c0d0; /* Texto gris claro, no blanco puro */
+  position: relative; 
+  
+  /* 1. Imagen de fondo solicitada */
+  background-image: url('/inicio-bg.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+
+  color: #c0c0d0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-sizing: border-box;
 }
 
+/* 2. Capa oscura para leer el texto (SIN DESENFOQUE) */
+.admin-container::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  
+  /* Oscurecemos la imagen al 85% para que resalten los formularios */
+  background-color: rgba(10, 10, 20, 0.85); 
+  
+  /* SIN backdrop-filter: blur(...) */
+  
+  z-index: 0; 
+}
+
+/* 3. Contenido por encima del fondo */
+.admin-container > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* --- TÍTULOS --- */
 .admin-title {
-  color: #82b1ff; /* Azul suave pastel */
+  color: #82b1ff;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 30px;
   text-align: center;
   font-size: 2.2rem;
   font-weight: 600;
-  /* Quitamos el text-shadow fuerte para que no encandile */
 }
 
 .section-title {
   color: #e0e0e0;
-  border-bottom: 2px solid #3f51b5; /* Línea más oscura y sobria */
+  border-bottom: 2px solid #3f51b5;
   display: inline-block;
   padding-bottom: 5px;
   margin-bottom: 25px;
   font-size: 1.4rem;
 }
 
-/* --- TARJETAS (SOBRIAS) --- */
+/* --- TARJETAS --- */
 .admin-card {
-  background: #23232e; /* Fondo sólido, no transparente */
-  border: 1px solid #333; /* Borde sutil */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  background: #23232e; 
+  border: 1px solid #444;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   padding: 40px;
   margin: 0 auto 40px auto;
@@ -944,7 +971,7 @@ ARCHIVO: .\frontend\src\components\Admin.css
 }
 
 .admin-form input {
-  background-color: #2b2b36; /* Un poco más claro que el fondo */
+  background-color: #2b2b36;
   border: 1px solid #444;
   color: #eee;
   padding: 12px;
@@ -955,7 +982,7 @@ ARCHIVO: .\frontend\src\components\Admin.css
 }
 
 .admin-form input:focus {
-  border-color: #82b1ff; /* Acento suave al escribir */
+  border-color: #82b1ff;
 }
 
 .admin-form input::placeholder {
@@ -964,11 +991,11 @@ ARCHIVO: .\frontend\src\components\Admin.css
 
 /* --- BOTÓN DE ENVÍO --- */
 .btn-admin-submit {
-  background-color: #3f51b5; /* Azul índigo mate */
+  background-color: #3f51b5;
   color: white;
   border: none;
   padding: 12px;
-  border-radius: 6px; /* Menos redondo */
+  border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
@@ -978,31 +1005,26 @@ ARCHIVO: .\frontend\src\components\Admin.css
 }
 
 .btn-admin-submit:hover {
-  background-color: #5c6bc0; /* Un poco más claro al pasar el mouse */
+  background-color: #5c6bc0;
 }
 
-/* --- NOTIFICACIÓN FLOTANTE (REUTILIZABLE) --- */
+/* --- NOTIFICACIÓN FLOTANTE --- */
 .notificacion-oval {
   position: fixed;
-  top: 50%;              /* Centrado Vertical */
-  left: 50%;             /* Centrado Horizontal */
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  
-  background-color: rgba(30, 30, 40, 0.95); /* Fondo oscuro semitransparente */
-  color: #00d2ff;        /* Texto Cyan Neón */
+  background-color: rgba(30, 30, 40, 0.95);
+  color: #00d2ff;
   border: 1px solid #00d2ff;
-  
   padding: 20px 40px;
   border-radius: 50px;   
-  
   font-family: 'Segoe UI', sans-serif;
   font-weight: 600;
   font-size: 1.1rem;
   text-align: center;
-  
-  box-shadow: 0 0 30px rgba(0, 210, 255, 0.2); /* Resplandor suave */
+  box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
   z-index: 9999;
-  
   animation: aparecerCentro 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -1011,24 +1033,21 @@ ARCHIVO: .\frontend\src\components\Admin.css
   to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* --- MODAL DE CONFIRMACIÓN (ESTILO GAMER) --- */
+/* --- MODAL DE CONFIRMACIÓN --- */
 .modal-backdrop {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85); /* Fondo muy oscuro para bloquear */
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000; /* Por encima de todo */
-  backdrop-filter: blur(4px); /* Efecto borroso pro */
+  z-index: 10000;
+  backdrop-filter: blur(4px);
 }
 
 .modal-neon {
   background-color: #1a1a24;
-  border: 1px solid #ff5252; /* Borde Rojo para acciones peligrosas */
+  border: 1px solid #ff5252;
   box-shadow: 0 0 20px rgba(255, 82, 82, 0.2);
   padding: 30px;
   border-radius: 12px;
@@ -1399,14 +1418,14 @@ ARCHIVO: .\frontend\src\components\Carrito.css
   text-align: center;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #e0e0e0; /* Texto claro */
-  max-width: 600px;
+  color: #e0e0e0;
+  max-width: 900px; /* Un poco más ancho para que entre todo bien */
   margin: 0 auto;
 }
 
 .carrito-container h2 {
   margin-bottom: 20px;
-  color: #00d2ff; /* Título Neón */
+  color: #00d2ff; /* Azul neón */
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -1429,11 +1448,8 @@ ARCHIVO: .\frontend\src\components\Carrito.css
   display: flex;
   justify-content: space-between;
   align-items: center;
-  
-  /* Fondo semitransparente para que se lea sobre la imagen */
-  background-color: rgba(30, 30, 40, 0.8); 
+  background-color: rgba(30, 30, 40, 0.85); /* Fondo oscuro para que se lea */
   border: 1px solid #444;
-  
   margin: 10px 0;
   padding: 15px;
   border-radius: 8px;
@@ -1454,7 +1470,7 @@ ARCHIVO: .\frontend\src\components\Carrito.css
 }
 
 .info-producto .precio {
-  color: #00d2ff; /* Precio en cyan */
+  color: #00d2ff;
   font-size: 0.9rem;
   margin-top: 4px;
 }
@@ -1463,7 +1479,7 @@ ARCHIVO: .\frontend\src\components\Carrito.css
 .controles-cantidad {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 }
 
 .cantidad {
@@ -1471,23 +1487,28 @@ ARCHIVO: .\frontend\src\components\Carrito.css
   font-weight: bold;
 }
 
+/* --- ESTILO DEL NUEVO BOTÓN ELIMINAR --- */
 .btn-eliminar {
-  background-color: #ff5252; /* Rojo suave */
-  color: white;
+  background-color: #ff5252; /* Rojo sólido (Ya no es transparente) */
+  color: white;              /* Texto blanco */
   border: none;
-  border-radius: 4px;
-  width: 30px;
-  height: 30px;
+  border-radius: 6px;
+  padding: 8px 14px;
   cursor: pointer;
+  
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
-  transition: background 0.2s;
+  gap: 8px; /* Espacio entre ícono y texto */
+  
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: all 0.2s ease;
 }
 
 .btn-eliminar:hover {
   background-color: #ff1744;
+  transform: scale(1.05);
 }
 
 /* RESUMEN Y BOTÓN FINAL */
@@ -1509,7 +1530,6 @@ ARCHIVO: .\frontend\src\components\Carrito.css
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
-  
   background: linear-gradient(45deg, #00d2ff, #007bff);
   color: white;
   border: none;
@@ -1530,19 +1550,16 @@ import React from "react";
 import "./Carrito.css";
 import { useNavigate } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
-// Importamos el contexto
 import { useNotification } from "../context/NotificationContext";
 
 function Carrito({ carrito, restarDelCarrito, vaciarCarrito, usuario }) {
   
   const navigate = useNavigate();
-  // Usamos la función global
   const { mostrarNotificacion } = useNotification();
-
+  
   const total = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
 
   const crearPedido = () => {
-    // Validación: Usuario
     if (!usuario) {
         mostrarNotificacion("🔒 Inicia sesión para finalizar la compra");
         setTimeout(() => {
@@ -1551,7 +1568,6 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito, usuario }) {
         return;
     }
 
-    // Validación: Carrito vacío
     if (carrito.length === 0) {
         mostrarNotificacion("⚠️ El carrito está vacío");
         return;
@@ -1612,33 +1628,14 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito, usuario }) {
                 <div className="controles-cantidad">
                     <span className="cantidad">Cant: {item.cantidad}</span>
                     
+                    {/* --- BOTÓN AHORA TIENE TEXTO E ÍCONO --- */}
                     <button 
                         className="btn-eliminar" 
                         onClick={() => restarDelCarrito(item.id)}
-                        title="Eliminar del carrito"
-                        style={{
-                            background: 'transparent',
-                            border: '1px solid #ff5252',
-                            color: '#ff5252',
-                            width: '35px',
-                            height: '35px',
-                            borderRadius: '6px',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 82, 82, 0.2)';
-                            e.currentTarget.style.transform = 'scale(1.1)';
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.background = 'transparent';
-                            e.currentTarget.style.transform = 'scale(1)';
-                        }}
+                        title="Eliminar producto"
                     >
-                         <FaTrash size={16} />
+                         <FaTrash size={14} /> 
+                         <span>Eliminar</span>
                     </button>
                 </div>
               </li>
@@ -1657,7 +1654,6 @@ function Carrito({ carrito, restarDelCarrito, vaciarCarrito, usuario }) {
   );
 }
 
-// ESTA ES LA LÍNEA QUE FALTABA Y CAUSABA EL ERROR:
 export default Carrito;
 ==================================================
 ARCHIVO: .\frontend\src\components\Categorias.css
@@ -2330,9 +2326,87 @@ function Navbar({ usuario, onLogout, carrito, busqueda, setBusqueda }) {
 
 export default Navbar;
 ==================================================
+ARCHIVO: .\frontend\src\components\Pedidos.css
+==================================================
+/* frontend/src/components/Pedidos.css */
+
+.pedidos-container {
+    padding: 20px;
+    color: #e0e0e0; /* TEXTO CLARO (Soluciona lo que no se veía) */
+    max-width: 900px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .pedidos-container h2 {
+    text-align: center;
+    color: #00d2ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+  }
+  
+  /* TARJETA DE CADA PEDIDO */
+  .pedido-card {
+    /* Fondo oscuro semi-transparente para que se lea sobre la imagen de fondo */
+    background-color: rgba(20, 20, 30, 0.90); 
+    border: 1px solid #444;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+  }
+  
+  .pedido-card h4 {
+    color: #82b1ff;
+    margin-top: 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+  
+  .pedido-card p {
+    margin: 5px 0;
+    color: #ccc;
+    font-size: 0.95rem;
+  }
+  
+  /* TABLA INTERNA */
+  .tabla-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.9rem;
+    background-color: rgba(0,0,0,0.3); /* Un poco más oscuro dentro de la tabla */
+    border-radius: 4px;
+  }
+  
+  .tabla-pedidos th,
+  .tabla-pedidos td {
+    border: 1px solid #555;
+    padding: 10px;
+    text-align: center;
+    color: #ddd; /* Asegura que el texto de la tabla sea claro */
+  }
+  
+  .tabla-pedidos th {
+    background-color: #2b2b36;
+    color: #82b1ff;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+  
+  .tabla-pedidos td:first-child {
+      text-align: left;
+      color: white;
+  }s
+==================================================
 ARCHIVO: .\frontend\src\components\Pedidos.jsx
 ==================================================
 import React, { useEffect, useState } from "react";
+import "./Pedidos.css"; // <-- Importamos los estilos nuevos
 
 function Pedidos() {
   const [pedidos, setPedidos] = useState([]);
@@ -2341,7 +2415,6 @@ function Pedidos() {
     fetch("http://localhost:8080/api/pedidos")
       .then((res) => res.json())
       .then((data) => {
-        console.log("Pedidos recibidos:", data);  // Para debug
         setPedidos(data);
       })
       .catch((err) => {
@@ -2351,34 +2424,43 @@ function Pedidos() {
   }, []);
 
   return (
-    <div>
+    <div className="pedidos-container">
       <h2>Historial de Pedidos</h2>
       {pedidos.length === 0 ? (
-        <p>No hay pedidos aún.</p>
+        <p style={{textAlign: 'center', color: '#ccc'}}>No hay pedidos aún.</p>
       ) : (
         pedidos.map((pedido) => (
-          <div key={pedido.id} style={{ border: "1px solid #ccc", margin: "20px", padding: "10px" }}>
+          <div key={pedido.id} className="pedido-card">
             <h4>Pedido #{pedido.id}</h4>
-            <p>Fecha: {new Date(pedido.fecha).toLocaleString()}</p>
-            <p>Estado: {pedido.estado}</p>
-            <p>Total: ${pedido.total.toFixed(2)}</p>
+            <p><strong>Fecha:</strong> {new Date(pedido.fecha).toLocaleString()}</p>
+            <p>
+                <strong>Estado:</strong> 
+                <span style={{ 
+                    marginLeft: '8px', 
+                    color: pedido.estado === 'FACTURADO' ? '#4caf50' : '#00d2ff',
+                    fontWeight: 'bold' 
+                }}>
+                    {pedido.estado}
+                </span>
+            </p>
+            <p><strong>Total:</strong> ${pedido.total.toFixed(2)}</p>
 
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <table className="tabla-pedidos">
               <thead>
                 <tr>
-                  <th style={{ border: "1px solid black" }}>Producto</th>
-                  <th style={{ border: "1px solid black" }}>Cantidad</th>
-                  <th style={{ border: "1px solid black" }}>Precio Unitario</th>
-                  <th style={{ border: "1px solid black" }}>Subtotal</th>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unit.</th>
+                  <th>Subtotal</th>
                 </tr>
               </thead>
               <tbody>
                 {pedido.lineas.map((linea, index) => (
                   <tr key={index}>
-                    <td style={{ border: "1px solid black" }}>{linea.productoNombre}</td>
-                    <td style={{ border: "1px solid black" }}>{linea.cantidad}</td>
-                    <td style={{ border: "1px solid black" }}>${linea.productoPrecio?.toFixed(2)}</td>
-                    <td style={{ border: "1px solid black" }}>${(linea.productoPrecio * linea.cantidad).toFixed(2)}</td>
+                    <td>{linea.productoNombre}</td>
+                    <td>{linea.cantidad}</td>
+                    <td>${linea.productoPrecio?.toFixed(2)}</td>
+                    <td>${(linea.productoPrecio * linea.cantidad).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -66,4 +66,25 @@ public class PedidoService {
             return pedidoRepository.save(pedido);
         }).orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
     }
+
+    // ... imports y código anterior
+
+    // NUEVO MÉTODO: Eliminar pedido y restaurar stock
+    public void deletePedido(String id) {
+        // 1. Buscamos el pedido antes de borrarlo
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        // 2. Recorremos sus líneas para devolver el stock
+        for (LineaPedido linea : pedido.getLineas()) {
+            // Usamos ifPresent para evitar errores si el producto ya no existe
+            productoRepository.findById(linea.getProductoId()).ifPresent(producto -> {
+                producto.setStock(producto.getStock() + linea.getCantidad());
+                productoRepository.save(producto);
+            });
+        }
+
+        // 3. Finalmente borramos el pedido físico
+        pedidoRepository.deleteById(id);
+    }
 }

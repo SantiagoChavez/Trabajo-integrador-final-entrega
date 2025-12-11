@@ -32,6 +32,9 @@ public class ProductoService {
             
             if(productoActualizado.getNombre() != null) 
                 productoExistente.setNombre(productoActualizado.getNombre());
+
+            if(productoActualizado.getMarca() != null) 
+                productoExistente.setMarca(productoActualizado.getMarca());
             
             if(productoActualizado.getDescripcion() != null) 
                 productoExistente.setDescripcion(productoActualizado.getDescripcion());
